@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Form lets me click the reset button to clear the form 1`] = `
+<div>
+  <form
+    onSubmit={[Function]}
+  >
+    <div
+      className="group"
+    >
+      <label>
+        customerProfileId
+      </label>
+      <input
+        id="customerProfileId"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      className="group"
+    >
+      <label>
+        externalSubjectName
+      </label>
+      <input
+        id="externalSubjectName"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      className="group"
+    >
+      <label>
+        externalSubjectReference
+      </label>
+      <input
+        id="externalSubjectReference"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+    <button
+      data-testid="submit-button"
+      type="submit"
+    >
+      Submit
+    </button>
+    <button
+      data-testid="reset-button"
+      onClick={[Function]}
+      type="button"
+    >
+      Reset
+    </button>
+  </form>
+</div>
+`;
+
+exports[`Form lets me fill out the form with values 1`] = `
+<div>
+  <form
+    onSubmit={[Function]}
+  >
+    <div
+      className="group"
+    >
+      <label>
+        customerProfileId
+      </label>
+      <input
+        id="customerProfileId"
+        onChange={[Function]}
+        type="text"
+        value="james"
+      />
+    </div>
+    <div
+      className="group"
+    >
+      <label>
+        externalSubjectName
+      </label>
+      <input
+        id="externalSubjectName"
+        onChange={[Function]}
+        type="text"
+        value="james"
+      />
+    </div>
+    <div
+      className="group"
+    >
+      <label>
+        externalSubjectReference
+      </label>
+      <input
+        id="externalSubjectReference"
+        onChange={[Function]}
+        type="text"
+        value="james"
+      />
+    </div>
+    <button
+      data-testid="submit-button"
+      type="submit"
+    >
+      Submit
+    </button>
+    <button
+      data-testid="reset-button"
+      onClick={[Function]}
+      type="button"
+    >
+      Reset
+    </button>
+  </form>
+</div>
+`;

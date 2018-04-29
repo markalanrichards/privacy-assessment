@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unthemed components shallow - it works 1`] = `
+.c0 {
+  color: red;
+}
+
+<button
+  className="c0"
+/>
+`;
+
+exports[`Unthemed components wrapper - it works 1`] = `
+.c0 {
+  color: red;
+}
+
+<styled.button>
+  <button
+    className="c0"
+  />
+</styled.button>
+`;
+
+exports[`With Theme 1`] = `
+.c0 {
+  color: mediumseagreen;
+}
+
+<button
+  className="c0"
+/>
+`;

@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`error - extraInfo 1`] = `
+<h3>
+  extraInfo
+</h3>
+`;
+
+exports[`error - graphQLErrors 1`] = `
+<h3>
+  graphQLErrors
+</h3>
+`;
+
+exports[`error - loads no message 1`] = `
+<div>
+  <h1>
+    AHhh Error
+  </h1>
+</div>
+`;
+
+exports[`error - message 1`] = `
+<Component
+  extraInfo={null}
+  graphQLErrors={null}
+  message="error message"
+  networkError={null}
+>
+  <div>
+    <h1>
+      AHhh Error
+    </h1>
+    <Display
+      message="error message"
+      title="message"
+    >
+      <div>
+        <h3>
+          message
+        </h3>
+        <span>
+          error message
+        </span>
+      </div>
+    </Display>
+  </div>
+</Component>
+`;
+
+exports[`error - networkError 1`] = `
+<h3>
+  networkError
+</h3>
+`;

@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Title component With Theme Normal 1`] = `
+.c0 {
+  color: yellow;
+  font-size: 10;
+}
+
+<h1
+  className="c0"
+>
+  title
+</h1>
+`;
+
+exports[`Title component With Theme Super 1`] = `
+.c0 {
+  color: yellow;
+  font-size: 10;
+  text-transform: uppercase;
+}
+
+<h1
+  className="c0"
+>
+  title
+</h1>
+`;

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Title component With Theme Normal 1`] = `
+<Component
+  title="title"
+  url="https://test.com"
+>
+  <a
+    href="https://test.com"
+  >
+    <styled.button
+      type="button"
+    >
+      <button
+        className="sc-bdVaJa ktQjs"
+        type="button"
+      >
+        title
+      </button>
+    </styled.button>
+  </a>
+</Component>
+`;

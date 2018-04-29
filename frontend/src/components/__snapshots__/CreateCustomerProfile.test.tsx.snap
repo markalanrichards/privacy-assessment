@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Form lets me click the reset button to clear the form 1`] = `
+<div>
+  <form
+    onSubmit={[Function]}
+  >
+    <div
+      className="group"
+    >
+      <label>
+        Name
+      </label>
+      <input
+        id="externalLegalName"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+    <div
+      className="group"
+    >
+      <label>
+        Email
+      </label>
+      <input
+        id="externalEmail"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+    <button
+      data-testid="submit-button"
+      type="submit"
+    >
+      Submit
+    </button>
+    <button
+      data-testid="reset-button"
+      onClick={[Function]}
+      type="button"
+    >
+      Reset
+    </button>
+  </form>
+</div>
+`;
+
+exports[`Form lets me fill out the form with values 1`] = `
+<div>
+  <form
+    onSubmit={[Function]}
+  >
+    <div
+      className="group"
+    >
+      <label>
+        Name
+      </label>
+      <input
+        id="externalLegalName"
+        onChange={[Function]}
+        type="text"
+        value="James"
+      />
+    </div>
+    <div
+      className="group"
+    >
+      <label>
+        Email
+      </label>
+      <input
+        id="externalEmail"
+        onChange={[Function]}
+        type="text"
+        value="james@test.com"
+      />
+    </div>
+    <button
+      data-testid="submit-button"
+      type="submit"
+    >
+      Submit
+    </button>
+    <button
+      data-testid="reset-button"
+      onClick={[Function]}
+      type="button"
+    >
+      Reset
+    </button>
+  </form>
+</div>
+`;
