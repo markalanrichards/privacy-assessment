@@ -1,0 +1,17 @@
+task: minio-setup
+image: docker-mc
+config:
+  platform: linux
+  run:
+    path: sh
+    args:
+    - -exc
+    - |
+      mc rm --force --recursive minio/npmcache || echo "didn't exist"
+      mc mb minio/npmcache
+      mkdir test
+      mkdir npmcache
+      echo test >> test/test
+      tar czf npmcache/npmcache.tar.gz -C test .
+      tar czf npmcache/npm.tar.gz -C test .
+      mc cp npmcache/* minio/npmcache/

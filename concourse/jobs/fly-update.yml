@@ -1,0 +1,15 @@
+name: fly-update
+serial: true
+serial_groups: [docker]
+plan:
+- get: docker-fly
+  passed:
+  - fly-worker
+- get: git-concourse
+  trigger: true
+- get: docker-mc
+  passed:
+   - minio-setup
+- task: mc-fetch-npmcache
+- task: fly-update-concourse
+- task: mc-npmcache-to-minio

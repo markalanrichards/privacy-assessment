@@ -1,0 +1,7 @@
+port: $PORT
+hostname: 0.0.0.0
+database: postgres
+serverJdbcConfiguration:
+  jdbcUrl: $DATABASE_JDBC
+  jdbcUsername: $DATABASE_USERNAME
+  jdbcPassword: $DATABASE_PASSWORD

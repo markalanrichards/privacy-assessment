@@ -1,0 +1,26 @@
+task: fly-update-concourse
+image: docker-fly
+config:
+  platform: linux
+  inputs:
+  - name: git-concourse
+  outputs:
+  - name: npmcache-out
+  params:
+    CONCOURSE_CREDENTIALS: bf5c1bc4-6d8a-11e7-b606-9b99aafc56cd
+    CONCOURSE_LOGIN_URL: http://privacy-assessment-web:8080
+  run:
+    path: bash
+    args:
+    - -exc
+    - |
+      set +e
+      . ~/.bashrc
+      set -e
+      pushd git-concourse/concourse
+        npm install -DE
+        npm run start
+        fly -t ci unpause-pipeline -p privacy-assessment
+        tar czf ../../npmcache-out/npmcache.tar.gz -C node_modules .
+        tar czf ../../npmcache-out/npm.tar.gz -C ~/.npm .
+      popd

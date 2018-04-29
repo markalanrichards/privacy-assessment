@@ -1,0 +1,9 @@
+name: heroku-worker
+serial: true
+serial_groups: [docker]
+plan:
+- get: git-docker-heroku
+  trigger: true
+- put: docker-heroku
+  params:
+    build: git-docker-heroku/docker/heroku

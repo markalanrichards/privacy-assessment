@@ -1,0 +1,9 @@
+name: worker-build
+serial: true
+serial_groups: [docker]
+plan:
+- get: git-docker-worker
+  trigger: true
+- put: docker-pipeline-worker
+  params:
+    build: git-docker-worker/docker/worker

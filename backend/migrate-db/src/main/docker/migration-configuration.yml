@@ -1,0 +1,4 @@
+server:
+  jdbcUrl: "jdbc:mysql://mysql:3306/server?connectTimeout=30&createDatabaseIfNotExist=true&useSSL=false"
+  jdbcUsername: privacy
+  jdbcPassword: privacy

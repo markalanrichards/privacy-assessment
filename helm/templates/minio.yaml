@@ -1,0 +1,25 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-minio
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-minio
+    spec:
+      containers:
+        - name: minio
+          image: minio/minio:RELEASE.2017-05-05T01-14-51Z
+          ports:
+            - containerPort: 9000
+          args:
+          - server
+          - "/export"
+          env:
+          - name: MINIO_ACCESS_KEY
+            value: MINIO_ACCESS_KEY
+          - name: MINIO_SECRET_KEY
+            value: MINIO_SECRET_KEY

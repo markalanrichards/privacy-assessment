@@ -1,0 +1,110 @@
+{
+  "namespace": "pias.backend.avro",
+  "protocol": "CustomerProfileAvpr",
+  "types": [
+    {
+      "name": "CustomerProfileAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        },
+        {
+          "name": "epoch",
+          "type": "string"
+        },
+        {
+          "name": "externalEmail",
+          "type": "string"
+        },
+        {
+          "name": "externalLegalName",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "CustomerProfileCreateAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "externalEmail",
+          "type": "string"
+        },
+        {
+          "name": "externalLegalName",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "CustomerProfileUpdateAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "lastVersion",
+          "type": "string"
+        },
+        {
+          "name": "externalEmail",
+          "type": "string"
+        },
+        {
+          "name": "externalLegalName",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "avroCreateCustomerProfile": {
+      "request": [
+        {
+          "name": "request",
+          "type": "CustomerProfileCreateAvro"
+        }
+      ],
+      "response": "CustomerProfileAvro"
+    },
+    "avroUpdateCustomerProfile": {
+      "request": [
+        {
+          "name": "update",
+          "type": "CustomerProfileUpdateAvro"
+        }
+      ],
+      "response": "CustomerProfileAvro"
+    },
+    "avroReadCustomerProfile": {
+      "request": [
+        {
+          "name": "id",
+          "type": "string"
+        }
+      ],
+      "response": "CustomerProfileAvro"
+    },
+    "avroReadVersionedCustomerProfile": {
+      "request": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        }
+      ],
+      "response": "CustomerProfileAvro"
+    }
+  }
+}

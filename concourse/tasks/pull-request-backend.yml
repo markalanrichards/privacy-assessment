@@ -1,0 +1,26 @@
+task: pull-request-backend
+privileged: true
+config:
+  platform: linux
+  image_resource:
+    type: docker-image
+    source:
+      repository: "concourse-registry:5000/backend-worker"
+      insecure_registries: ["concourse-registry:5000"]
+      privileged: true
+  inputs:
+    - name: pull-request
+  run:
+    path: bash
+    args:
+    - -xc
+    - |
+      cp -r pull-request /root/pull-request
+      pushd /root/pull-request/backend
+        . ./run-maven-in-docker.sh
+      popd
+on_failure:
+  put:  pull-request
+  params:
+    path: pull-request
+    status: failure

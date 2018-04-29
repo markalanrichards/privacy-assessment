@@ -1,0 +1,37 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=postgres
+  graphql-middlware:
+    build:
+      context: .
+      dockerfile: Graphql-middleware.Dockerfile
+    depends_on:
+      - backend
+    volumes:
+      - ./:/originalsrc
+    environment:
+      - AVPR_HOST=backend
+      - AVPR_PORT=8000
+      - PORT=9000
+    ports:
+     - "9000:9000"
+  backend:
+    build:
+      context: .
+      dockerfile: Backend.Dockerfile
+    depends_on:
+    - postgres
+    ports:
+     - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/postgres
+      - PORT=8000
+      - DATABASE_SSLMODE=disable
+    volumes:
+      - ./:/originalsrc
+    deploy:
+      restart_policy:
+        condition: any

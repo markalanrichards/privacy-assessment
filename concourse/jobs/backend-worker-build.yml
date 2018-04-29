@@ -1,0 +1,9 @@
+name: backend-worker-build
+serial: true
+serial_groups: [docker]
+plan:
+- get: git-docker-backend-worker
+  trigger: true
+- put: docker-backend-worker
+  params:
+    build: git-docker-backend-worker/docker/backend-worker

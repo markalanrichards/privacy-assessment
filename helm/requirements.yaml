@@ -1,0 +1,5 @@
+dependencies:
+- name: concourse
+  version: 0.4.0
+  repository: "https://kubernetes-charts.storage.googleapis.com"
+

@@ -1,0 +1,9 @@
+name: semver-backend
+type: semver
+source:
+  driver: git
+  uri: git@github.com:markalanrichards/privacy-assessment.git
+  branch: backend-version
+  file: backend-version
+  private_key: dcc82a2e-5370-11e7-a183-080027ad35e6
+  initial_version: 0.0.1

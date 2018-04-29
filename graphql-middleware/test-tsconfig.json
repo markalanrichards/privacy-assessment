@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "target": "es2017",
+    "lib": ["es2017", "esnext.asynciterable"],
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "outDir": "dist/test"
+  },
+  "include": ["avpr/*.*", "test/**/*"],
+  "exclude": ["node_modules", "src"]
+}

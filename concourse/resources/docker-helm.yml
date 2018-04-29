@@ -1,0 +1,5 @@
+name: docker-helm
+type: docker-image
+source:
+  repository: "concourse-registry:5000/helm-worker"
+  insecure_registries: ["concourse-registry:5000"]

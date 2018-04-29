@@ -1,0 +1,9 @@
+name: mc-worker
+serial: true
+serial_groups: [docker]
+plan:
+- get: git-docker-mc
+  trigger: true
+- put: docker-mc
+  params:
+    build: git-docker-mc/docker/mc

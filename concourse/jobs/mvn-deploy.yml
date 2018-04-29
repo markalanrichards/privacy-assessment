@@ -1,0 +1,28 @@
+name: mvn deploy
+serial: true
+serial_groups: [integration]
+plan:
+- get: docker-backend-worker
+  passed:
+   - backend-version
+  trigger: true
+- get: docker-mc
+  passed:
+   - minio-setup
+- get: semver-backend
+  trigger: true
+  passed:
+   - backend-version
+- get: semver-avprs
+  trigger: true
+  passed:
+   - avprs-version
+- get: git-backend
+  trigger: true
+  passed:
+   - backend-version
+- get: git-avprs
+  trigger: true
+  passed:
+   - avprs-version
+- task: backend-mvn-clean-deploy

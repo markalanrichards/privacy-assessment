@@ -1,0 +1,134 @@
+{
+  "namespace": "pias.backend.avro",
+  "protocol": "SubjectProfileAvpr",
+  "types": [
+    {
+      "name": "SubjectProfileAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        },
+        {
+          "name": "epoch",
+          "type": "string"
+        },
+        {
+          "name": "customerProfileId",
+          "type": "string"
+        },
+        {
+          "name": "externalSubjectName",
+          "type": "string"
+        },
+        {
+          "name": "externalSubjectReference",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "SubjectProfileCreateAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "customerProfileId",
+          "type": "string"
+        },
+        {
+          "name": "externalSubjectName",
+          "type": "string"
+        },
+        {
+          "name": "externalSubjectReference",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "SubjectProfileUpdateAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "lastVersion",
+          "type": "string"
+        },
+        {
+          "name": "customerProfileId",
+          "type": "string"
+        },
+        {
+          "name": "externalSubjectName",
+          "type": "string"
+        },
+        {
+          "name": "externalSubjectReference",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "avroCreateSubjectProfile": {
+      "request": [
+        {
+          "name": "request",
+          "type": "SubjectProfileCreateAvro"
+        }
+      ],
+      "response": "SubjectProfileAvro"
+    },
+    "avroUpdateSubjectProfile": {
+      "request": [
+        {
+          "name": "update",
+          "type": "SubjectProfileUpdateAvro"
+        }
+      ],
+      "response": "SubjectProfileAvro"
+    },
+    "avroReadSubjectProfile": {
+      "request": [
+        {
+          "name": "id",
+          "type": "string"
+        }
+      ],
+      "response": "SubjectProfileAvro"
+    },
+    "avroReadVersionedSubjectProfile": {
+      "request": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        }
+      ],
+      "response": "SubjectProfileAvro"
+    },
+    "avroReadSubjectProfilesForCustomerProfile": {
+      "request": [
+        {
+          "name": "customerProfileId",
+          "type": "string"
+        }
+      ],
+      "response": {
+        "type": "array",
+        "items": "SubjectProfileAvro"
+      }
+    }
+  }
+}

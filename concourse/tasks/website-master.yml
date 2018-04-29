@@ -1,0 +1,26 @@
+task: website-master
+image: docker-pipeline-worker
+config:
+  platform: linux
+  inputs:
+    - name: git-website
+    - name: npmcache-in
+  outputs:
+    - name: npmcache-out
+  run:
+    path: bash
+    args:
+    - -exc
+    - |
+      . ~/.bashrc
+      pushd git-website/website
+        mkdir node_modules
+        mkdir ~/.npm
+        tar xzf ../../npmcache-in/npmcache.tar.gz -C node_modules
+        tar xzf ../../npmcache-in/npm.tar.gz -C ~/.npm
+        npm install -DE
+        npm run unit
+        npm run int
+        tar czf ../../npmcache-out/npmcache.tar.gz -C node_modules .
+        tar czf ../../npmcache-out/npm.tar.gz -C ~/.npm .
+      popd

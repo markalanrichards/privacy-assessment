@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-registry
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-registry
+    spec:
+      containers:
+        - name: docker-registry
+          image: registry
+          ports:
+            - containerPort: 5000
+          volumeMounts:
+          - name: registryvolume
+            mountPath: /var/lib/registry
+      volumes:
+      - name: registryvolume
+        persistentVolumeClaim:
+          claimName: registryvolumeclaim

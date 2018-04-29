@@ -1,0 +1,7 @@
+name: minio-setup
+plan:
+- get: docker-mc
+  passed:
+  - mc-worker
+  trigger: true
+- task: minio-setup

@@ -1,0 +1,4 @@
+name: pull-request
+type: docker-image
+source:
+  repository: jtarchie/pr

@@ -1,0 +1,9 @@
+name: debianstretch-build
+serial: true
+serial_groups: [docker]
+plan:
+- get: git-docker-debianstretch
+  trigger: true
+- put: docker-debianstretch
+  params:
+    build: git-docker-debianstretch/docker/debianstretch

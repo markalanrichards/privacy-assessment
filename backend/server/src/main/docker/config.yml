@@ -1,0 +1,6 @@
+port: 8000
+hostname: 0.0.0.0
+serverJdbcConfiguration:
+  jdbcUrl: "jdbc:mysql://mysql:3306/server?connectTimeout=30&useSSL=false"
+  jdbcUsername: privacy
+  jdbcPassword: privacy

@@ -1,0 +1,5 @@
+name: docker-heroku
+type: docker-image
+source:
+  repository: "concourse-registry:5000/heroku"
+  insecure_registries: ["concourse-registry:5000"]

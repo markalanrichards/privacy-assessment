@@ -1,0 +1,5 @@
+name: docker-fly
+type: docker-image
+source:
+  repository: "concourse-registry:5000/fly"
+  insecure_registries: ["concourse-registry:5000"]

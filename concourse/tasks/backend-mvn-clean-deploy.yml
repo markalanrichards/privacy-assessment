@@ -1,0 +1,26 @@
+task: backend-mvn-clean-deploy
+privileged: true
+config:
+  platform: linux
+  image_resource:
+    type: docker-image
+    source:
+      repository: "concourse-registry:5000/backend-worker"
+      insecure_registries: ["concourse-registry:5000"]
+      privileged: true
+  inputs:
+    - name: git-backend
+    - name: semver-backend
+    - name: semver-avprs
+    - name: git-avprs
+  run:
+    path: bash
+    args:
+    - -xc
+    - |
+      cp -r git-backend/backend /root/backend
+      cp -r git-avprs/avprs /root/avprs
+      pushd /root/backend
+        export AVPRS_DIR=/root/avprs
+        . ./run-maven-in-docker.sh
+      popd

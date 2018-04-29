@@ -1,0 +1,22 @@
+dockerRegistryDns: concourse-registry
+dockerInfluxDbDns: influxdb-host
+dockerMinioDns: minio
+dockerSonatypeNexusDns: nexus
+dockerSonarqube: sonarqube
+concourse:
+  concourse:
+    dockerRegistry: concourse-registry:5000
+    insecureDockerRegistry: concourse-registry:5000
+  worker:
+    replicas: 1
+    resources:
+      requests:
+        memory: "1024Mi"
+  persistence:
+    worker:
+      size: 20Gi
+
+  web:
+    resources:
+      requests:
+        memory: "512Mi"

@@ -1,0 +1,13 @@
+task: mc-fetch-npmcache
+image: docker-mc
+config:
+  platform: linux
+  outputs:
+    - name: npmcache-in
+  run:
+    path: sh
+    args:
+    - -exc
+    - |
+      mc cp --recursive minio/npmcache fetched
+      mv fetched/npmcache/* npmcache-in

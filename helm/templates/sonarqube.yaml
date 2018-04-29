@@ -1,0 +1,18 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-sonarqube
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-sonarqube
+    spec:
+      containers:
+        - name: sonarqube
+          image: sonarqube
+          ports:
+            - containerPort: 9000
+            - containerPort: 9092

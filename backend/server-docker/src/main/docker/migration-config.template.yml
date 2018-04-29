@@ -1,0 +1,5 @@
+server:
+  jdbcUrl: $DATABASE_JDBC
+  jdbcUsername: $DATABASE_USERNAME
+  jdbcPassword: $DATABASE_PASSWORD
+database: postgres

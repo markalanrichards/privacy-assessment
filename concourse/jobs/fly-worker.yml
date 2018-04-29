@@ -1,0 +1,9 @@
+name: fly-worker
+serial: true
+serial_groups: [docker]
+plan:
+- get: git-docker-fly
+  trigger: true
+- put: docker-fly
+  params:
+    build: git-docker-fly/docker/fly

@@ -1,0 +1,11 @@
+name: helm-deploy
+plan:
+- get: git-helm
+  trigger: true
+- get: docker-helm
+  passed:
+  - helm-worker
+- get: docker-mc
+  passed:
+   - minio-setup
+- task: helm-deploy

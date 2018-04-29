@@ -1,0 +1,28 @@
+task: helm-deploy
+image: docker-helm
+config:
+  platform: linux
+  inputs:
+    - name: git-helm
+  params:
+    kubeconfig: 701edc5a-6db1-11e7-aeb0-c38df1c09e26
+  run:
+    path: bash
+    args:
+    - -exc
+    - |
+      pushd git-helm
+        mkdir -p /root/.kube
+
+        python -c '
+      import os
+      f = open("/root/.kube/config", "w")
+      f.write(os.environ["kubeconfig"])
+      f.close
+        '
+
+        helm init -c
+        helm init --upgrade || true
+        helm dependency build ./helm
+        helm upgrade privacy-assessment ./helm
+      popd

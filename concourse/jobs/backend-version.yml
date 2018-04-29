@@ -1,0 +1,12 @@
+name: backend-version
+serial: true
+serial_groups: [integration]
+plan:
+- get: docker-backend-worker
+  trigger: true
+  passed:
+    - backend-worker-build
+- get: git-backend
+  trigger: true
+- put: semver-backend
+  params: {bump: patch}

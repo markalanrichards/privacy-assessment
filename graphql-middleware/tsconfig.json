@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "target": "es2017",
+    "module": "CommonJs",
+    "lib": ["es2017", "esnext.asynciterable"],
+    "preserveConstEnums": true,
+    "sourceMap": true,
+    "outDir": "dist/src"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}

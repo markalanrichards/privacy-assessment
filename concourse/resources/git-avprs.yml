@@ -1,0 +1,8 @@
+name: git-avprs
+type: git
+source:
+    uri: git@github.com:markalanrichards/privacy-assessment.git
+  branch: master
+  private_key: dcc82a2e-5370-11e7-a183-080027ad35e6
+  paths:
+    - "avprs"

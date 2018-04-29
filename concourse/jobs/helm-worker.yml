@@ -1,0 +1,9 @@
+name: helm-worker
+serial: true
+serial_groups: [docker]
+plan:
+- get: git-docker-helm
+  trigger: true
+- put: docker-helm
+  params:
+    build: git-docker-helm/docker/helm

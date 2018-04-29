@@ -1,0 +1,15 @@
+CREATE TABLE pia_ids (
+  pia_id BIGINT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,
+  pia_version BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  PRIMARY KEY (pia_id, pia_version)
+) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;
+
+
+CREATE TABLE pias (
+  pia_id BIGINT UNSIGNED NOT NULL,
+  pia_version BIGINT UNSIGNED NOT NULL,
+  pia_subject_profile_id BIGINT UNSIGNED NOT NULL,
+  pia_epoch BIGINT UNSIGNED NOT NULL,
+  pia_document BLOB NOT NULL,
+  PRIMARY KEY (pia_id, pia_version)
+) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8mb4;;

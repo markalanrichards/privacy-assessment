@@ -1,0 +1,15 @@
+task: pull-request-success
+image: docker-backend-worker
+config:
+  platform: linux
+  run:
+    path: bash
+    args:
+    - -exc
+    - |
+      echo success
+on_success:
+  put:  pull-request
+  params:
+    path: pull-request
+    status: success

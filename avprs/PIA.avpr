@@ -1,0 +1,513 @@
+{
+  "namespace": "pias.backend",
+  "protocol": "PIAAvpr",
+  "types": [
+    {
+      "name": "PIAAnnex1Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "Will the project involve the collection of new information about individuals?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "Will the project compel individuals to provide information about themselves?"
+        },
+        {
+          "name": "question3",
+          "type": "string",
+          "doc": "Will information about individuals be disclosed to organisations or people who have not previously had routine access to the information?"
+        },
+        {
+          "name": "question4",
+          "type": "string",
+          "doc": "Does the project involve you using new technology that might be perceived as being privacy intrusive? For example, the use of biometrics or facial recognition."
+        },
+        {
+          "name": "question5",
+          "type": "string",
+          "doc": "Will the project result in you making decisions or taking action against individuals in ways that can have a significant impact on them?"
+        },
+        {
+          "name": "question6",
+          "type": "string",
+          "doc": "Is the information about individuals of a kind particularly likely to raise privacy concerns or expectations? For example, health records, criminal records or other information that people would consider to be private."
+        },
+        {
+          "name": "question7",
+          "type": "string",
+          "doc": "Will the project require you to contact individuals in ways that they may find intrusive?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex2Step3Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "field1",
+          "type": "string",
+          "doc": "Privacy Issue"
+        },
+        {
+          "name": "field2",
+          "type": "string",
+          "doc": "Risk to individuals"
+        },
+        {
+          "name": "field3",
+          "type": "string",
+          "doc": "Compliance risk"
+        },
+        {
+          "name": "field4",
+          "type": "string",
+          "doc": "Associated organisation / corporate risk"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex2Step4Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "field1",
+          "type": "string",
+          "doc": "Risk"
+        },
+        {
+          "name": "field2",
+          "type": "string",
+          "doc": "Solution(s)"
+        },
+        {
+          "name": "field3",
+          "type": "string",
+          "doc": "Result: is the risk eliminated, reduced, or accepted?"
+        },
+        {
+          "name": "field4",
+          "type": "string",
+          "doc": "Evaluation: is the final impact on individuals after implementing each solution a justified, compliant and proportionate response to the aims of the project?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex2Step5Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "field1",
+          "type": "string",
+          "doc": "Risk"
+        },
+        {
+          "name": "field2",
+          "type": "string",
+          "doc": "Approved solution"
+        },
+        {
+          "name": "field3",
+          "type": "string",
+          "doc": "Approved by"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex2Step6Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "field1",
+          "type": "string",
+          "doc": "Action to be taken"
+        },
+        {
+          "name": "field2",
+          "type": "string",
+          "doc": "Date for completion of actions"
+        },
+        {
+          "name": "field3",
+          "type": "string",
+          "doc": "Responsibility for action"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex2Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "step1",
+          "type": "string",
+          "doc": " Identify the need for a PIA"
+        },
+        {
+          "name": "step2Part1",
+          "type": "string",
+          "doc": " Describe the information flows"
+        },
+        {
+          "name": "step2Part2",
+          "type": "string",
+          "doc": "Consultation requirements"
+        },
+        {
+          "name": "step3",
+          "type": "PIAAnnex2Step3Avro",
+          "doc": "Identify the privacy and related risks"
+        },
+        {
+          "name": "step4",
+          "type": "PIAAnnex2Step4Avro",
+          "doc": "Identify privacy solutions"
+        },
+        {
+          "name": "step5",
+          "type": "PIAAnnex2Step5Avro",
+          "doc": "Sign off and record the PIA outcomes "
+        },
+        {
+          "name": "step6",
+          "type": "PIAAnnex2Step6Avro",
+          "doc": "Integrate the PIA outcomes back into the project plan  "
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Principle1Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "Have you identified the purpose of the project?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "How will you tell individuals about the use of their personal data?"
+        },
+        {
+          "name": "question3",
+          "type": "string",
+          "doc": "Do you need to amend your privacy notices?"
+        },
+        {
+          "name": "question4",
+          "type": "string",
+          "doc": "Have you established which conditions for processing apply?"
+        },
+        {
+          "name": "question5",
+          "type": "string",
+          "doc": "If you are relying on consent to process personal data, how will this be collected and what will you do if it is withheld or withdrawn?"
+        },
+        {
+          "name": "question6",
+          "type": "string",
+          "doc": "If your organisation is subject to the Human Rights Act, you also need to consider"
+        },
+        {
+          "name": "question7",
+          "type": "string",
+          "doc": "Will your actions interfere with the right to privacy under Article 8?"
+        },
+        {
+          "name": "question8",
+          "type": "string",
+          "doc": "Have you identified the social need and aims of the project?"
+        },
+        {
+          "name": "question9",
+          "type": "string",
+          "doc": "Are your actions a proportionate response to the social need?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Principle2Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "Does your project plan cover all of the purposes for processing personal data?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "Have you identified potential new purposes as the scope of the project expands?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Principle3Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "Is the quality of the information good enough for the purposes it is used?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "Which personal data could you not use, without compromising the needs of the project?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Principle4Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "If you are procuring new software does it allow you to amend data when necessary?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "How are you ensuring that personal data obtained from individuals or other organisations is accurate?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Principle5Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "What retention periods are suitable for the personal data you will be processing?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "Are you procuring software that will allow you to delete information in line with your retention periods?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Principle6Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "Will the systems you are putting in place allow you to respond to subject access requests more easily?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "If the project involves marketing, have you got a procedure for individuals to opt out of their information being used for that purpose?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Principle7Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "Do any new systems provide protection against the security risks you have identified?Do any new systems provide protection against the security risks you have identified?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "What training and instructions are necessary to ensure that staff know how to operate a new system securely?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Principle8Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "question1",
+          "type": "string",
+          "doc": "Will the project require you to transfer data outside of the EEA?"
+        },
+        {
+          "name": "question2",
+          "type": "string",
+          "doc": "If you will be making transfers, how will you ensure that the data is adequately protected?"
+        }
+      ]
+    },
+    {
+      "name": "PIAAnnex3Avro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "principle1",
+          "type": "PIAAnnex3Principle1Avro",
+          "doc": "Personal data shall be processed fairly and lawfully and, in particular, shall not be processed unless"
+        },
+        {
+          "name": "principle2",
+          "type": "PIAAnnex3Principle2Avro",
+          "doc": "Personal data shall be obtained only for one or more specified and lawful purposes, and shall not be further processed in any manner incompatible with that purpose or those purposes."
+        },
+        {
+          "name": "principle3",
+          "type": "PIAAnnex3Principle3Avro",
+          "doc": "Personal data shall be adequate, relevant and not excessive in relation to the purpose or purposes for which they are processed."
+        },
+        {
+          "name": "principle4",
+          "type": "PIAAnnex3Principle4Avro",
+          "doc": "Personal data shall be accurate and, where necessary, kept up to date."
+        },
+        {
+          "name": "principle5",
+          "type": "PIAAnnex3Principle5Avro",
+          "doc": "Personal data processed for any purpose or purposes shall not be kept for longer than necessary for that purpose or those purposes."
+        },
+        {
+          "name": "principle6",
+          "type": "PIAAnnex3Principle6Avro",
+          "doc": "Personal data shall be processed in accordance with the rights of data subjects under this Act."
+        },
+        {
+          "name": "principle7",
+          "type": "PIAAnnex3Principle7Avro",
+          "doc": "Appropriate technical and organisational measures shall be taken against unauthorised or unlawful processing of personal data and against accidental loss or destruction of, or damage to, personal data."
+        },
+        {
+          "name": "principle8",
+          "type": "PIAAnnex3Principle8Avro",
+          "doc": "Personal data shall not be transferred to a country or territory outside the European Economic Area unless that country of territory ensures and adequate level of protection for the rights and freedoms of data subjects in relation to the processing of personal data."
+        }
+      ]
+    },
+    {
+      "name": "PIADocumentAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "annex1",
+          "type": "PIAAnnex1Avro"
+        },
+        {
+          "name": "annex2",
+          "type": "PIAAnnex2Avro"
+        },
+        {
+          "name": "annex3",
+          "type": "PIAAnnex3Avro"
+        }
+      ]
+    },
+    {
+      "name": "PIAAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        },
+        {
+          "name": "epoch",
+          "type": "string"
+        },
+        {
+          "name": "subjectProfileId",
+          "type": "string"
+        },
+        {
+          "name": "document",
+          "type": "PIADocumentAvro"
+        }
+      ]
+    },
+    {
+      "name": "PIACreateAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "subjectProfileId",
+          "type": "string"
+        },
+        {
+          "name": "document",
+          "type": "PIADocumentAvro"
+        }
+      ]
+    },
+    {
+      "name": "PIAUpdateAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "lastVersion",
+          "type": "string"
+        },
+        {
+          "name": "subjectProfileId",
+          "type": "string"
+        },
+        {
+          "name": "document",
+          "type": "PIADocumentAvro"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "avroCreatePIA": {
+      "request": [
+        {
+          "name": "request",
+          "type": "PIACreateAvro"
+        }
+      ],
+      "response": "PIAAvro"
+    },
+    "avroUpdatePIA": {
+      "request": [
+        {
+          "name": "update",
+          "type": "PIAUpdateAvro"
+        }
+      ],
+      "response": "PIAAvro"
+    },
+    "avroReadPIA": {
+      "request": [
+        {
+          "name": "id",
+          "type": "string"
+        }
+      ],
+      "response": "PIAAvro"
+    },
+    "avroReadVersionedPIA": {
+      "request": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        }
+      ],
+      "response": "PIAAvro"
+    }
+  }
+}

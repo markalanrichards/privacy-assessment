@@ -1,0 +1,8 @@
+name: avprs-version
+serial: true
+serial_groups: [integration]
+plan:
+- get: git-avprs
+  trigger: true
+- put: semver-avprs
+  params: {bump: patch}
