@@ -11,6 +11,6 @@ import org.eclipse.collections.api.list.primitive.ImmutableByteList;
 @Value
 @Builder(toBuilder = true)
 public class PIA {
-    long version, id, subjectProfileId, epoch;
-    ImmutableByteList document;
+  long version, id, subjectProfileId, epoch;
+  ImmutableByteList document;
 }

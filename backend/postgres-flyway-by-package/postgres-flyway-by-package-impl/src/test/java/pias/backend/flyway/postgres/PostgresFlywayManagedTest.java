@@ -13,26 +13,27 @@ import java.util.Map;
 
 public class PostgresFlywayManagedTest {
 
-    @Rule
-    public PostgresFlywayManagedDatabase flywayManagedDatabase = new PostgresFlywayManagedDatabase(PostgresFlywayManagedTest.class);
+  @Rule
+  public PostgresFlywayManagedDatabase flywayManagedDatabase =
+      new PostgresFlywayManagedDatabase(PostgresFlywayManagedTest.class);
 
-    @Test
-    public void testMigration() throws SQLException {
+  @Test
+  public void testMigration() throws SQLException {
 
-        final DBI dbi = flywayManagedDatabase.getDbi();
+    final DBI dbi = flywayManagedDatabase.getDbi();
 
-        final Long aLong = dbi.inTransaction((handle, transactionStatus) -> {
-            final Update statement = handle.createStatement("INSERT INTO contexts(context_id) VALUES(DEFAULT)");
-            statement.execute();
-            final Query<Map<String, Object>> query = handle.createQuery("SELECT currval(pg_get_serial_sequence('contexts', 'context_id'));");
-            final Query<Long> map = query.map(LongColumnMapper.PRIMITIVE);
-            return map.list().get(0);
-
-
-        });
-        Assert.assertEquals(aLong.longValue(), 1L);
-
-
-    }
-
+    final Long aLong =
+        dbi.inTransaction(
+            (handle, transactionStatus) -> {
+              final Update statement =
+                  handle.createStatement("INSERT INTO contexts(context_id) VALUES(DEFAULT)");
+              statement.execute();
+              final Query<Map<String, Object>> query =
+                  handle.createQuery(
+                      "SELECT currval(pg_get_serial_sequence('contexts', 'context_id'));");
+              final Query<Long> map = query.map(LongColumnMapper.PRIMITIVE);
+              return map.list().get(0);
+            });
+    Assert.assertEquals(aLong.longValue(), 1L);
+  }
 }

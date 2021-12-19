@@ -1,6 +1,5 @@
 package pias.backend.id.server.entity;
 
-
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -11,8 +10,8 @@ import lombok.Value;
 @ToString
 @Builder
 public class PrivacyConfiguration {
-    int port;
-    String hostname;
-    JdbcConfiguration serverJdbcConfiguration;
-    String database;
+  int port;
+  String hostname;
+  JdbcConfiguration serverJdbcConfiguration;
+  String database;
 }

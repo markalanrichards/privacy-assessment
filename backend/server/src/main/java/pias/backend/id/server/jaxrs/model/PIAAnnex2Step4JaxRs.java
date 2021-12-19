@@ -1,19 +1,3 @@
 package pias.backend.id.server.jaxrs.model;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-@Getter
-@Setter
-@Builder
-@ToString
-@EqualsAndHashCode
-public class PIAAnnex2Step4JaxRs {
-    private String field1;
-    private String field2;
-    private String field3;
-    private String field4;
-}
+public record PIAAnnex2Step4JaxRs(String field1, String field2, String field3, String field4) {}

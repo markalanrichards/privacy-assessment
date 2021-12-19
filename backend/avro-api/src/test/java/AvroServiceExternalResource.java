@@ -1,9 +1,8 @@
-import org.apache.avro.ipc.NettyServer;
-import org.apache.avro.ipc.NettyTransceiver;
 import org.apache.avro.ipc.Server;
+import org.apache.avro.ipc.netty.NettyServer;
+import org.apache.avro.ipc.netty.NettyTransceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.apache.avro.ipc.specific.SpecificResponder;
-import org.apache.avro.util.Utf8;
 import org.junit.rules.ExternalResource;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
@@ -12,56 +11,56 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Random;
 import java.util.UUID;
-import java.util.function.Function;
 
 public class AvroServiceExternalResource<T> extends ExternalResource {
-    public static String RANDOM_UTF8() {
-        return UUID.randomUUID().toString();
-    }
-    public static Random RANDOM = new Random();
-    public static ArgumentMatcher<CharSequence> CHARSEQUENCE_MATCHER(final CharSequence toMatch) {
-        return new ArgumentMatcher<CharSequence>() {
-            @Override
-            public boolean matches(Object o) {
-                return o.toString().equals(toMatch.toString());
-            }
-        };
-    }
-    private Server server;
-    private NettyTransceiver nettyTransceiver;
-    private T service;
-    private final Class<T> clazz;
-    private T client;
+  public static String RANDOM_UTF8() {
+    return UUID.randomUUID().toString();
+  }
 
-    public AvroServiceExternalResource(Class<T> clazz) {
-        this.clazz = clazz;
+  public static Random RANDOM = new Random();
 
-    }
+  public static ArgumentMatcher<CharSequence> CHARSEQUENCE_MATCHER(final CharSequence toMatch) {
 
-    @Override
-    public void before() throws IOException {
-        service = Mockito.mock(clazz);
-        server = new NettyServer(new SpecificResponder(clazz, service), new InetSocketAddress(0));
+    return new ArgumentMatcher<CharSequence>() {
+      @Override
+      public boolean matches(CharSequence o) {
+        return o.toString().equals(toMatch.toString());
+      }
+    };
+  }
 
-        server.start();
+  private Server server;
+  private NettyTransceiver nettyTransceiver;
+  private T service;
+  private final Class<T> clazz;
+  private T client;
 
-        nettyTransceiver = new NettyTransceiver(new InetSocketAddress(server.getPort()));
-        client = SpecificRequestor.getClient(clazz, nettyTransceiver);
+  public AvroServiceExternalResource(Class<T> clazz) {
+    this.clazz = clazz;
+  }
 
-    }
+  @Override
+  public void before() throws IOException, InterruptedException {
+    service = Mockito.mock(clazz);
+    server = new NettyServer(new SpecificResponder(clazz, service), new InetSocketAddress(0));
 
-    @Override
-    public void after() {
-        nettyTransceiver.close();
-        server.close();
+    server.start();
 
-    }
+    nettyTransceiver = new NettyTransceiver(new InetSocketAddress(server.getPort()));
+    client = SpecificRequestor.getClient(clazz, nettyTransceiver);
+  }
 
-    public T getClient() {
-        return client;
-    }
+  @Override
+  public void after() {
+    nettyTransceiver.close();
+    server.close();
+  }
 
-    public T getService() {
-        return service;
-    }
+  public T getClient() {
+    return client;
+  }
+
+  public T getService() {
+    return service;
+  }
 }

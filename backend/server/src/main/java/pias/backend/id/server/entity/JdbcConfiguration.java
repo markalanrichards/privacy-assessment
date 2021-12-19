@@ -10,7 +10,7 @@ import lombok.Value;
 @ToString
 @Builder
 public class JdbcConfiguration {
-    String jdbcUrl;
-    String jdbcUsername;
-    String jdbcPassword;
+  String jdbcUrl;
+  String jdbcUsername;
+  String jdbcPassword;
 }

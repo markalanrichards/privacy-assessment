@@ -5,6 +5,7 @@
     <artifactId>parent-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <modules>
+        <module>logging</module>
         <module>avro-api</module>
         <module>flyway-by-package</module>
         <module>mysql-flyway-by-package</module>
@@ -19,38 +20,44 @@
 
     <name>Privacy Impact Assessments Backend</name>
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <async-http-client.version>2.0.38</async-http-client.version>
-        <avro.version>1.8.2</avro.version>
-        <commons-compress.version>1.15</commons-compress.version>
-        <commons-io.version>2.6</commons-io.version>
+        <async-http-client.version>2.12.3</async-http-client.version>
+        <avro.version>1.11.0</avro.version>
+        <commons-compress.version>1.21</commons-compress.version>
+        <commons-io.version>2.11.0</commons-io.version>
         <commons-lang.version>2.6</commons-lang.version>
-        <cucumber.version>1.2.5</cucumber.version>
-        <eclipse-collections.version>8.2.0</eclipse-collections.version>
-        <flyway-core.version>5.0.3</flyway-core.version>
-        <functionaljava.version>4.7</functionaljava.version>
+        <cucumber.version>1.2.6</cucumber.version>
+        <eclipse-collections.version>11.0.0</eclipse-collections.version>
+        <flyway-core.version>8.2.2</flyway-core.version>
+        <functionaljava.version>4.9</functionaljava.version>
         <hamcrest-junit.version>2.0.0.0</hamcrest-junit.version>
         <hamcrest-all.version>1.3</hamcrest-all.version>
-        <HikariCP.version>2.7.4</HikariCP.version>
-        <jackson.version>2.9.3</jackson.version>
-        <jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
-        <jcommander.version>1.72</jcommander.version>
+        <HikariCP.version>5.0.0</HikariCP.version>
+        <jackson.version>2.13.1</jackson.version>
+        <jcommander.version>1.81</jcommander.version>
         <jdbi.version>2.78</jdbi.version>
-        <jetty.version>9.4.8.v20171121</jetty.version>
-        <junit.version>4.12</junit.version>
-        <log4j.version>2.10.0</log4j.version>
-        <lombok.version>1.16.18</lombok.version>
-        <mockito.version>1.9.5</mockito.version>
-        <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
-        <maven-shade-plugin.version>3.1.0</maven-shade-plugin.version>
-        <metrics-servlets.version>3.2.5</metrics-servlets.version>
-        <mysql-connector-java.version>6.0.6</mysql-connector-java.version>
-        <testcontainers.version>1.7.1</testcontainers.version>
-        <slf4j-api.version>1.7.25</slf4j-api.version>
-        <sonar-maven-plugin.version>3.3.0.603</sonar-maven-plugin.version>
-        <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+        <jetty.version>10.0.7</jetty.version>
+        <junit.version>4.13.2</junit.version>
+        <log4j.version>2.17.0</log4j.version>
+        <lombok.version>1.18.22</lombok.version>
+        <mockito.version>4.2.0</mockito.version>
+        <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
+        <dropwizard-metrics.version>4.2.6</dropwizard-metrics.version>
+        <mysql-connector-java.version>8.0.27</mysql-connector-java.version>
+        <testcontainers.version>1.16.2</testcontainers.version>
+        <slf4j-api.version>1.7.32</slf4j-api.version>
+        <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
+        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <postgresql.version>42.3.1</postgresql.version>
+        <cxf.version>3.4.5</cxf.version>
+        <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
+        <netty-bom.version>4.1.72.Final</netty-bom.version>
+        <spotless-maven-plugin.version>2.17.6</spotless-maven-plugin.version>
     </properties>
     <profiles>
         <profile>
@@ -124,37 +131,60 @@
         </profile>
     </profiles>
     <dependencyManagement>
+
         <dependencies>
+            <!-- https://mvnrepository.com/artifact/io.netty/netty-bom -->
             <dependency>
-                <groupId>com.fasterxml.jackson.jaxrs</groupId>
-                <artifactId>jackson-jaxrs-json-provider</artifactId>
-                <version>2.9.3</version>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-bom</artifactId>
+                <version>${netty-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
+
+
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-bom</artifactId>
+                <version>${log4j.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+
+
+            </dependency>
+
             <dependency>
                 <groupId>javax.annotation</groupId>
                 <artifactId>javax.annotation-api</artifactId>
-                <version>1.3.1</version>
+                <version>${javax.annotation-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>3.2.1</version>
+                <version>${cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-transports-http</artifactId>
-                <version>3.2.1</version>
+                <version>${cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                <version>3.2.1</version>
+                <version>${cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-rs-client</artifactId>
                 <scope>test</scope>
-                <version>3.2.1</version>
+                <version>${cxf.version}</version>
             </dependency>
             <dependency>
                 <groupId>pias.backend</groupId>
@@ -162,15 +192,20 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>pias.backend</groupId>
+                <artifactId>logging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.functionaljava</groupId>
                 <artifactId>functionaljava</artifactId>
                 <version>${functionaljava.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.functionaljava</groupId>
-                <artifactId>functionaljava-java8</artifactId>
-                <version>${functionaljava.version}</version>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>org.functionaljava</groupId>-->
+            <!--                <artifactId>functionaljava-java8</artifactId>-->
+            <!--                <version>${functionaljava.version}</version>-->
+            <!--            </dependency>-->
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-junit</artifactId>
@@ -217,7 +252,11 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
+            <dependency>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-ipc-netty</artifactId>
+                <version>${avro.version}</version>
+            </dependency>
             <dependency>
                 <groupId>pias.backend</groupId>
                 <artifactId>mysql-flyway-by-package-impl</artifactId>
@@ -225,16 +264,17 @@
                 <scope>test</scope>
                 <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>${mysql-connector-java.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-compress</artifactId>
-                <version>${commons-compress.version}</version>
-            </dependency>
+            <!--            <dependency>-->
+            <!--                <groupId>org.apache.commons</groupId>-->
+            <!--                <artifactId>commons-compress</artifactId>-->
+            <!--                <version>${commons-compress.version}</version>-->
+            <!--            </dependency>-->
             <dependency>
                 <groupId>commons-lang</groupId>
                 <artifactId>commons-lang</artifactId>
@@ -245,13 +285,13 @@
             <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-core</artifactId>
-                <version>${metrics-servlets.version}</version>
+                <version>${dropwizard-metrics.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/io.dropwizard.metrics/metrics-servlets -->
             <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-servlets</artifactId>
-                <version>${metrics-servlets.version}</version>
+                <version>${dropwizard-metrics.version}</version>
             </dependency>
             <dependency>
                 <groupId>pias.backend</groupId>
@@ -289,23 +329,6 @@
                 <groupId>pias.backend</groupId>
                 <artifactId>avro-api</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <!--&lt;!&ndash; https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl &ndash;&gt;-->
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-slf4j-impl</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind &ndash;&gt;-->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
             </dependency>
 
             <dependency>
@@ -353,6 +376,11 @@
                 <version>${flyway-core.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-mysql</artifactId>
+                <version>${flyway-core.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jdbi</groupId>
                 <artifactId>jdbi</artifactId>
                 <version>${jdbi.version}</version>
@@ -361,7 +389,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.2.1</version>
+                <version>${postgresql.version}</version>
             </dependency>
 
             <dependency>
@@ -392,17 +420,6 @@
                 <artifactId>eclipse-collections-forkjoin</artifactId>
                 <version>${eclipse-collections.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-api</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.logging.log4j</groupId>
-                <artifactId>log4j-core</artifactId>
-                <version>${log4j.version}</version>
-            </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
@@ -420,11 +437,6 @@
                 <artifactId>cucumber-junit</artifactId>
                 <version>${cucumber.version}</version>
                 <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.dataformat</groupId>
-                <artifactId>jackson-dataformat-yaml</artifactId>
-                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
@@ -492,58 +504,14 @@
                 <version>${sonar-maven-plugin.version}</version>
             </plugin>
             <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>pre-unit-test</id>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-                    <!--<execution>-->
-                    <!--<id>jacoco-check</id>-->
-                    <!--<phase>test</phase>-->
-                    <!--<goals>-->
-                    <!--<goal>check</goal>-->
-                    <!--<goal>report</goal>-->
-                    <!--</goals>-->
-                    <!--<configuration>-->
-                    <!--&lt;!&ndash; Sets the output directory for the code coverage report. &ndash;&gt;-->
-                    <!--<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>-->
-
-                    <!--</configuration>-->
-                    <!--</execution>-->
-                    <!--
-                               Ensures that the code coverage report for unit tests is created after
-                               unit tests have been run.
-                           -->
-                    <execution>
-                        <id>post-unit-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                        <configuration>
-                            <!-- Sets the output directory for the code coverage report. -->
-                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-                            <rules>
-                                <rule implementation="org.jacoco.maven.RuleConfiguration">
-                                    <element>BUNDLE</element>
-                                    <limits>
-                                        <limit implementation="org.jacoco.report.check.Limit">
-                                            <counter>INSTRUCTION</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.90</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
-                        </configuration>
-
-                    </execution>
-                </executions>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>${spotless-maven-plugin.version}</version>
+                <configuration>
+                    <java>
+                        <googleJavaFormat></googleJavaFormat>
+                    </java>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -555,11 +523,17 @@
                         <configuration>
 
                             <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>org.osgi:org.osgi.core</exclude>
+                                    </excludes>
+                                </bannedDependencies>
                                 <requireUpperBoundDeps>
                                     <!-- 'uniqueVersions' (default:false) can be set to true if you want to compare the timestamped SNAPSHOTs  -->
                                     <!-- <uniqueVersions>true</uniqueVersions> -->
                                     <!-- If you wish to ignore certain cases:
                                     -->
+
                                     <excludes>
                                         <exclude>org.slf4j:slf4j-api</exclude>
                                     </excludes>
@@ -576,7 +550,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.20.1</version>
+                <version>${maven-surefire-plugin.version}</version>
             </plugin>
         </plugins>
     </build>

@@ -5,11 +5,11 @@ import pias.backend.id.server.entity.CustomerProfileCreate;
 import pias.backend.id.server.entity.CustomerProfileUpdate;
 
 public interface CustomerProfileService {
-    CustomerProfile create(CustomerProfileCreate customerProfileCreate);
+  CustomerProfile create(CustomerProfileCreate customerProfileCreate);
 
-    CustomerProfile update(CustomerProfileUpdate customerProfileUpdate);
+  CustomerProfile update(CustomerProfileUpdate customerProfileUpdate);
 
-    CustomerProfile read(long id);
+  CustomerProfile read(long id);
 
-    CustomerProfile read(long id, long version);
+  CustomerProfile read(long id, long version);
 }

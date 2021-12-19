@@ -11,6 +11,6 @@ import org.eclipse.collections.api.list.primitive.ImmutableByteList;
 @EqualsAndHashCode
 @ToString
 public class PIACreate {
-    long subjectProfileId;
-    ImmutableByteList document;
+  long subjectProfileId;
+  ImmutableByteList document;
 }

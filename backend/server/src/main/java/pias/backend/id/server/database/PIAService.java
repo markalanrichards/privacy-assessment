@@ -5,11 +5,11 @@ import pias.backend.id.server.entity.PIACreate;
 import pias.backend.id.server.entity.PIAUpdate;
 
 public interface PIAService {
-    PIA create(PIACreate piaCreate);
+  PIA create(PIACreate piaCreate);
 
-    PIA read(long id, long version);
+  PIA read(long id, long version);
 
-    PIA read(long id);
+  PIA read(long id);
 
-    PIA update(PIAUpdate piaUpdate);
+  PIA update(PIAUpdate piaUpdate);
 }

@@ -10,6 +10,6 @@ import lombok.Value;
 @Builder(toBuilder = true)
 @EqualsAndHashCode
 public class SubjectProfileUpdate {
-    Long id, lastVersion, customerProfileId;
-    String externalSubjectName,  externalSubjectReference;
+  Long id, lastVersion, customerProfileId;
+  String externalSubjectName, externalSubjectReference;
 }

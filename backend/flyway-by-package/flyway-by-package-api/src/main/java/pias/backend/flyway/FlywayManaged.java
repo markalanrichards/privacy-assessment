@@ -1,7 +1,7 @@
 package pias.backend.flyway;
 
 public interface FlywayManaged {
-    void migrate();
+  void migrate();
 
-    void clean();
+  void clean();
 }

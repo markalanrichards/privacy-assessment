@@ -10,7 +10,6 @@ import lombok.Value;
 @Builder(toBuilder = true)
 @EqualsAndHashCode
 public class SubjectProfile {
-    long id,version, epoch, customerProfileId;
-    String externalSubjectName,  externalSubjectReference;
-
+  long id, version, epoch, customerProfileId;
+  String externalSubjectName, externalSubjectReference;
 }

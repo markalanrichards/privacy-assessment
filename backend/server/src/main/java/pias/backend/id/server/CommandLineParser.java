@@ -6,15 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CommandLineParser {
-    @Parameter
-    private List<String> parameters = new ArrayList<>();
+  @Parameter private List<String> parameters = new ArrayList<>();
 
-    @Parameter(names = "-configUrl", description = "Url to config", required = true)
-    private String configUrl;
+  @Parameter(names = "-configUrl", description = "Url to config", required = true)
+  private String configUrl;
 
-
-    public String getConfigUrl() {
-        return configUrl;
-    }
-
+  public String getConfigUrl() {
+    return configUrl;
+  }
 }

@@ -18,32 +18,26 @@ import java.net.URL;
 @Slf4j
 public class Migration {
 
+  public static void main(String args[]) throws IOException {
+    final CommandLineParser commandLineParser = new CommandLineParser();
+    JCommander.newBuilder().addObject(commandLineParser).build().parse(args);
+    final URL migrationConfigUrl = URI.create(commandLineParser.getMigrationConfigUrl()).toURL();
 
-    public static void main(String args[]) throws IOException {
-        final CommandLineParser commandLineParser = new CommandLineParser();
-        JCommander.newBuilder()
-                .addObject(commandLineParser)
-                .build()
-                .parse(args);
-        final URL migrationConfigUrl = URI.create(commandLineParser.getMigrationConfigUrl()).toURL();
+    final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
-        final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
-
-        final ObjectNode objectNode = (ObjectNode) objectMapper.readTree(migrationConfigUrl);
-        final MigrationConfigMapper migrationConfigMapper = new MigrationConfigMapper(new FlywayConfigMapper());
-        final MigrationConfig migrationConfig = migrationConfigMapper.fromJson(objectNode);
-        switch (migrationConfig.getDatabase()) {
-            case "mysql":
-                new MysqlMigrator().accept(migrationConfig);
-                break;
-            case "postgres":
-                new PostgresMigrator().accept(migrationConfig);
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown database");
-        }
-
-
+    final ObjectNode objectNode = (ObjectNode) objectMapper.readTree(migrationConfigUrl);
+    final MigrationConfigMapper migrationConfigMapper =
+        new MigrationConfigMapper(new FlywayConfigMapper());
+    final MigrationConfig migrationConfig = migrationConfigMapper.fromJson(objectNode);
+    switch (migrationConfig.getDatabase()) {
+      case "mysql":
+        new MysqlMigrator().accept(migrationConfig);
+        break;
+      case "postgres":
+        new PostgresMigrator().accept(migrationConfig);
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown database");
     }
-
+  }
 }

@@ -10,6 +10,5 @@ import lombok.Value;
 @Builder(toBuilder = true)
 @EqualsAndHashCode
 public class CustomerProfileCreate {
-    final String externalEmail, externalLegalEntity;
-
+  final String externalEmail, externalLegalEntity;
 }

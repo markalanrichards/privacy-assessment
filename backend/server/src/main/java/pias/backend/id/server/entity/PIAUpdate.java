@@ -11,6 +11,6 @@ import org.eclipse.collections.api.list.primitive.ImmutableByteList;
 @Value
 @Builder(toBuilder = true)
 public class PIAUpdate {
-    long lastVersion, id, subjectProfileId;
-    ImmutableByteList document;
+  long lastVersion, id, subjectProfileId;
+  ImmutableByteList document;
 }

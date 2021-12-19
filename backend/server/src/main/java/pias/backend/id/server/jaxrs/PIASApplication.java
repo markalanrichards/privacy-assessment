@@ -14,24 +14,36 @@ import java.util.Set;
 
 @ApplicationPath("rest")
 public class PIASApplication extends Application {
-    private final CustomerProfileService mysqlCustomerProfileService;
-    private final SubjectProfileService mysqlSubjectProfileService;
-    private final PIAService mysqlPiaService;
-    private final PIAAvprImpl piaAvprImpl;
+  private final CustomerProfileService mysqlCustomerProfileService;
+  private final SubjectProfileService mysqlSubjectProfileService;
+  private final PIAService mysqlPiaService;
+  private final PIAAvprImpl piaAvprImpl;
 
-    public PIASApplication(CustomerProfileService mysqlCustomerProfileService, SubjectProfileService mysqlSubjectProfileService, PIAService mysqlPiaService, PIAAvprImpl piaAvprImpl) {
-        this.mysqlCustomerProfileService = mysqlCustomerProfileService;
-        this.mysqlSubjectProfileService = mysqlSubjectProfileService;
-        this.mysqlPiaService = mysqlPiaService;
-        this.piaAvprImpl = piaAvprImpl;
-    }
+  public PIASApplication(
+      CustomerProfileService mysqlCustomerProfileService,
+      SubjectProfileService mysqlSubjectProfileService,
+      PIAService mysqlPiaService,
+      PIAAvprImpl piaAvprImpl) {
+    this.mysqlCustomerProfileService = mysqlCustomerProfileService;
+    this.mysqlSubjectProfileService = mysqlSubjectProfileService;
+    this.mysqlPiaService = mysqlPiaService;
+    this.piaAvprImpl = piaAvprImpl;
+  }
 
-    public Set<Object> getSingletons() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider(objectMapper);
-        CustomerProfileServiceJaxRs customerProfileJaxrs = new CustomerProfileServiceJaxRs(mysqlCustomerProfileService);
-        SubectProfileServiceJaxRs subectProfileServiceJaxRs = new SubectProfileServiceJaxRs(mysqlSubjectProfileService);
-        PIAServiceJaxRs piasAnnexOneServiceJaxRs = new PIAServiceJaxRs(mysqlPiaService, piaAvprImpl);
-        return Sets.immutable.<Object>of(customerProfileJaxrs, subectProfileServiceJaxRs, piasAnnexOneServiceJaxRs, jacksonJsonProvider).castToSet();
-    }
+  public Set<Object> getSingletons() {
+    ObjectMapper objectMapper = new ObjectMapper();
+    JacksonJsonProvider jacksonJsonProvider = new JacksonJsonProvider(objectMapper);
+    CustomerProfileServiceJaxRs customerProfileJaxrs =
+        new CustomerProfileServiceJaxRs(mysqlCustomerProfileService);
+    SubectProfileServiceJaxRs subectProfileServiceJaxRs =
+        new SubectProfileServiceJaxRs(mysqlSubjectProfileService);
+    PIAServiceJaxRs piasAnnexOneServiceJaxRs = new PIAServiceJaxRs(mysqlPiaService, piaAvprImpl);
+    return Sets.immutable
+        .<Object>of(
+            customerProfileJaxrs,
+            subectProfileServiceJaxRs,
+            piasAnnexOneServiceJaxRs,
+            jacksonJsonProvider)
+        .castToSet();
+  }
 }

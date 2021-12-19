@@ -12,14 +12,14 @@ import org.eclipse.collections.impl.factory.Lists;
 @Builder(toBuilder = true)
 @ToString
 public class FlywayJdbcConfig {
-    String jdbcUrl;
-    String user;
-    String password;
-    ImmutableList<String> initSqls;
-    long timeoutSeconds;
+  String jdbcUrl;
+  String user;
+  String password;
+  String initSql;
+  long timeoutSeconds;
 
-    public static class FlywayJdbcConfigBuilder {
-        ImmutableList<String> initSqls = Lists.immutable.empty();
-        long timeoutSeconds = 30L;
-    }
+  public static class FlywayJdbcConfigBuilder {
+    ImmutableList<String> initSqls = Lists.immutable.empty();
+    long timeoutSeconds = 30L;
+  }
 }

@@ -12,6 +12,6 @@ import java.util.Optional;
 @EqualsAndHashCode
 @ToString
 public class ResponsePojo {
-    private final Optional<String> body;
-    private final int code;
+  private final Optional<String> body;
+  private final int code;
 }

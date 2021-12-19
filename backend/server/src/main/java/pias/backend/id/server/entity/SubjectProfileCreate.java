@@ -10,6 +10,6 @@ import lombok.Value;
 @Builder(toBuilder = true)
 @EqualsAndHashCode
 public class SubjectProfileCreate {
-    long customerProfileId;
-    String externalSubjectName,  externalSubjectReference;
+  long customerProfileId;
+  String externalSubjectName, externalSubjectReference;
 }
