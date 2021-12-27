@@ -1,17 +1,32 @@
-module.exports = {
-  snapshotSerializers: ['enzyme-to-json/serializer'],
-  setupFiles: ['jest-plugin-context/setup', '<rootDir>/jest.setup.ts'],
-  transform: {
-    '^.+\\.tsx?$': 'ts-jest'
-  },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  transformIgnorePatterns: ['<rootDir>/node_modules'],
+export default {
+  "transform": {
+    "^.+\\.(t|j)sx?$": [
+      "@swc/jest",
+      {
+        "sourceMaps": true,
 
-  testMatch: ['<rootDir>/**/*.test.ts?(x)'],
-  moduleDirectories: ['node_modules'],
-  globals: {
-    'ts-jest': {
-      enableTsDiagnostics: true
-    }
-  }
+        "jsc": {
+          "parser": {
+            "syntax": "typescript",
+            "tsx": true
+          },
+
+          "transform": {
+            "react": {
+              "runtime": "automatic"
+            }
+          }
+        }
+      }
+    ]
+  },
+  moduleFileExtensions: ['js','ts', 'tsx'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  testEnvironment: 'jest-environment-jsdom',
+  transformIgnorePatterns: ['<rootDir>/node_modules'],
+  testMatch: ['<rootDir>/src/**/__tests__/*.test.tsx'],
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.js',  '@testing-library/jest-dom/extend-expect'
+]
 }
+
+

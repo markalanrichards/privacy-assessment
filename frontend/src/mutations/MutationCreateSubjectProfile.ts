@@ -1,42 +1,20 @@
-import gql from "graphql-tag";
+import axios from 'axios';
+import { useMutation } from 'react-query';
 
-export const MutationCreateSubjectProfile = gql`
-  mutation createSubjectProfile(
-    $customerProfileId: String!
-    $externalSubjectName: String!
-    $externalSubjectReference: String!
-  ) {
-    createSubjectProfile(
-      createSubjectProfile: {
-        customerProfileId: $customerProfileId
-        externalSubjectName: $externalSubjectName
-        externalSubjectReference: $externalSubjectReference
-      }
-    ) {
-      id
-      version
-      epoch
-      customerProfileId
-      externalSubjectName
-      externalSubjectReference
+interface CreateSubjectProfileVaribales {
+  customerProfileId: string;
+  externalSubjectName: string;
+  externalSubjectReference: string;
+}
+
+export function postCreateSubjectProfile() {
+  return useMutation(
+    'mutation',
+    async (varibales: CreateSubjectProfileVaribales) => {
+      const { data } = await axios.post('http://127.0.0.1:9000/mutation', {
+        varibales,
+      });
+      return data;
     }
-  }
-`;
-
-// const pasteInGUI = `mutation {
-//   createSubjectProfile(
-//     createSubjectProfile: {
-//       customerProfileId: "123456"
-//       externalSubjectName: "Test Test"
-//       externalSubjectReference: "testing"
-//     }
-//   ) {
-//     id
-//     version
-//     epoch
-//     customerProfileId
-//     externalSubjectName
-//     externalSubjectReference
-//   }
-// }
-// `;
+  );
+}

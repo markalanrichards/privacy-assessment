@@ -1,31 +1,16 @@
-import gql from "graphql-tag";
+import axios from 'axios';
+import { useMutation } from 'react-query';
 
-export const MutationCreateCustomerProfile = gql`
-  mutation createCustomerProfile(
-    $externalEmail: String!
-    $externalLegalName: String!
-  ) {
-    createCustomerProfile(
-      createCustomerProfile: {
-        externalEmail: $externalEmail
-        externalLegalName: $externalLegalName
-      }
-    ) {
-      id
-      version
-      epoch
-      externalEmail
-      externalLegalName
-    }
-  }
-`;
+interface CreateCustomerProfile {
+  externalEmail: string;
+  externalLegalName: string;
+}
 
-const pasteInGUI = `mutation {
-  createCustomerProfile(createCustomerProfile: {externalEmail: "teset@test.com", externalLegalName: "Test Test}) {
-    id
-    version
-    epoch
-    externalEmail
-    externalLegalName
-  }
-}`;
+export function postCreateCustomerProfile() {
+  return useMutation('mutation', async (varibales: CreateCustomerProfile) => {
+    const { data } = await axios.post('http://127.0.0.1:9000/mutation', {
+      varibales,
+    });
+    return data;
+  });
+}

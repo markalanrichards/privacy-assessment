@@ -1,64 +1,18 @@
-import * as express from 'express';
-import * as graphqlHTTP from 'express-graphql';
-import { GraphQLSchema } from 'graphql';
+import * as express from "express";
+import * as cors from "cors";
 
-import { customerProfileClientFactory } from './avroprotocols/customerProfileProtocol';
-import { piaClientFactory } from './avroprotocols/piaProtocol';
-import { subjectProfileClientFactory } from './avroprotocols/subjectProfileProtocol';
-import clientFactory from './client.factory';
-import { customerProfileFieldsFactory } from './fields/customerProfileFields';
-import { piaFieldsFactory } from './fields/piaFields';
-import { subjectProfileFieldsFactory } from './fields/subjectProfileFields';
-import { mutationTypeFactory } from './mutations/mutations';
-import { queryTypeFactory } from './querys/querys';
-
-import * as cors from 'cors';
-
-export const serverFactory = (
-  port: string,
-  host: string,
-  prefix: string,
-  avprPort: string,
-  avprProtocol: string
-) => {
+export const serverFactory = (port: string) => {
   const server = express();
-  const client = clientFactory(host, prefix, avprPort, avprProtocol);
-  const customerProfileClient = customerProfileClientFactory(client);
-  const subjectProfileClient = subjectProfileClientFactory(client);
-  const customerProfileFields = customerProfileFieldsFactory(
-    customerProfileClient
-  );
-  const piaClient = piaClientFactory(client);
-  const piaFields = piaFieldsFactory(piaClient);
 
-  const subjectProfileFields = subjectProfileFieldsFactory(
-    subjectProfileClient
-  );
-  const mutationType = mutationTypeFactory(
-    customerProfileFields,
-    subjectProfileFields,
-    piaFields
-  );
+  server.use(cors());
 
-  const queryType = queryTypeFactory(
-    customerProfileFields,
-    subjectProfileFields,
-    piaFields
-  );
+  server.use(express.json());
 
-  const schema = new GraphQLSchema({
-    query: queryType,
-    mutation: mutationType
+  server.post("/mutation", function(req, res) {
+    console.log(req.body);
+    res.send("POST request rercived to /mutation");
   });
-  server.use(
-    '/graphql',
-    cors(),
-    graphqlHTTP({
-      schema,
-      pretty: true,
-      graphiql: true
-    })
-  );
+
   const listener = server.listen(port, () => {
     const address = listener.address();
     // tslint:disable-next-line

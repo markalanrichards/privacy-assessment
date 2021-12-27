@@ -159,3 +159,4 @@ backend/avro-api/src/main/avro
 graphql-middleware/avpr
 graphql-middleware/src/avpr
 yarn.lock
+.parcel-cache

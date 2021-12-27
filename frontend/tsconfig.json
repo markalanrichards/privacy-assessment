@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
     "allowJs": true,
-
     "moduleResolution": "node",
     "noImplicitAny": false,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
     "outDir": "_dist",
-    "jsx": "react",
-    "lib": ["dom", "es5", "es2015", "es2016", "esnext.asynciterable"]
+    "jsx": "react-jsx",
+    "lib": ["dom", "es5", "es2015", "es2016", "esnext.asynciterable"],
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "types": ["jest", "node", "@testing-library/jest-dom"]
   },
-  "include": ["src/**/*", "server/**/*", "tests/**/*"],
+  "include": ["src/**/*", "./jest-setup.ts"],
   "exclude": ["node_modules", "**/node_modules"],
   "typeRoots": ["node_modules/@types"]
 }
