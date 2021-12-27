@@ -18,25 +18,22 @@ public class CustomerProfileAvprImpl implements CustomerProfileAvpr {
 
   @Override
   public CustomerProfileAvro avroCreateCustomerProfile(CustomerProfileCreateAvro request) {
-
-    return convertToAvro(
-        mysqlCustomerProfileService.create(
-            CustomerProfileCreate.builder()
-                .externalEmail(request.getExternalEmail().toString())
-                .externalLegalEntity(request.getExternalLegalName().toString())
-                .build()));
+    final CustomerProfileCreate customerProfileCreate =
+        new CustomerProfileCreate(request.getExternalEmail(), request.getExternalLegalName());
+    return convertToAvro(mysqlCustomerProfileService.create(customerProfileCreate));
   }
 
   @Override
   public CustomerProfileAvro avroUpdateCustomerProfile(CustomerProfileUpdateAvro update) {
+
+    final Long id = Long.valueOf(update.getId());
+    final Long lastVersion = Long.valueOf(update.getLastVersion());
+    final String externalLegalEntity = update.getExternalLegalName();
+    final String externalEmail = update.getExternalEmail();
+    final CustomerProfileUpdate customerProfileUpdate =
+        new CustomerProfileUpdate(id, lastVersion, externalEmail, externalLegalEntity);
     final CustomerProfile updatedCustomerProfile =
-        mysqlCustomerProfileService.update(
-            CustomerProfileUpdate.builder()
-                .externalEmail(update.getExternalEmail().toString())
-                .externalLegalEntity(update.getExternalLegalName().toString())
-                .id(Long.valueOf(update.getId()))
-                .lastVersion(Long.valueOf(update.getLastVersion()))
-                .build());
+        mysqlCustomerProfileService.update(customerProfileUpdate);
     return convertToAvro(updatedCustomerProfile);
   }
 
@@ -47,12 +44,17 @@ public class CustomerProfileAvprImpl implements CustomerProfileAvpr {
   }
 
   private CustomerProfileAvro convertToAvro(CustomerProfile read) {
+    final String externalLegalEntity = read.externalLegalEntity();
+    final String externalEmail = read.externalEmail();
+    final String id = String.valueOf(read.id());
+    final String epoch = String.valueOf(read.epoch());
+    final String version = String.valueOf(read.version());
     return CustomerProfileAvro.newBuilder()
-        .setExternalLegalName(read.getExternalLegalEntity())
-        .setExternalEmail(read.getExternalEmail())
-        .setId(String.valueOf(read.getId()))
-        .setVersion(String.valueOf(read.getVersion()))
-        .setEpoch(String.valueOf(read.getEpoch()))
+        .setExternalLegalName(externalLegalEntity)
+        .setExternalEmail(externalEmail)
+        .setId(id)
+        .setVersion(version)
+        .setEpoch(epoch)
         .build();
   }
 

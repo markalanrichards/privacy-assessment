@@ -1,5 +1,7 @@
 package pias.backend.flyway;
 
+import java.sql.*;
+import java.util.stream.Stream;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -7,9 +9,6 @@ import org.junit.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 import pias.backend.flyway.model.MigrationConfig;
 import pias.backend.flyway.postgres.PostgresMigrator;
-
-import java.sql.*;
-import java.util.stream.Stream;
 
 public class PostgresMigratorTest {
 
@@ -23,14 +22,14 @@ public class PostgresMigratorTest {
     postgreSQLContainer = new PostgreSQLContainer("postgres:11");
     postgreSQLContainer.start();
     migration = new PostgresMigrator();
-    migrationConfig =
-        MigrationConfig.builder()
-            .server(
-                getFlyJdbcConfig(
-                    postgreSQLContainer.getJdbcUrl(),
-                    postgreSQLContainer.getUsername(),
-                    postgreSQLContainer.getPassword()))
-            .build();
+    final MigrationConfig migrationConfig =
+        new MigrationConfig(
+            getFlyJdbcConfig(
+                postgreSQLContainer.getJdbcUrl(),
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword()),
+            postgreSQLContainer.getDatabaseName());
+    this.migrationConfig = migrationConfig;
   }
 
   @After
@@ -40,18 +39,17 @@ public class PostgresMigratorTest {
   }
 
   private FlywayJdbcConfig getFlyJdbcConfig(String jdbcUrl, String username, String password) {
-
-    return FlywayJdbcConfig.builder().jdbcUrl(jdbcUrl).user(username).password(password).build();
+    return new FlywayJdbcConfig(jdbcUrl, username, password, "", 30L);
   }
 
   @Test
   public void testMigrationIds() throws SQLException {
     final String contextLastIds = "customer_profiles";
-    String jdbcUrl = migrationConfig.getServer().getJdbcUrl();
+    String jdbcUrl = migrationConfig.server().jdbcUrl();
     assertTableExistsAndIsEmpty(
         jdbcUrl,
-        migrationConfig.getServer().getUser(),
-        migrationConfig.getServer().getPassword(),
+        migrationConfig.server().user(),
+        migrationConfig.server().password(),
         contextLastIds);
   }
 

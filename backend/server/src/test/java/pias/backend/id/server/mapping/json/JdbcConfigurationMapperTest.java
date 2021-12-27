@@ -3,7 +3,7 @@ package pias.backend.id.server.mapping.json;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import pias.backend.id.server.entity.JdbcConfiguration;
@@ -23,6 +23,7 @@ public class JdbcConfigurationMapperTest {
     final ObjectNode jsonNodes =
         jdbcConfigurationMapper.toJsonObject(JdbcConfigurationTest.SAMPLE_JDBC_CONFIGURATION);
     final JdbcConfiguration back = jdbcConfigurationMapper.toJdbcConfiguration(jsonNodes);
-    Assert.assertThat(back, CoreMatchers.equalTo(JdbcConfigurationTest.SAMPLE_JDBC_CONFIGURATION));
+    MatcherAssert.assertThat(
+        back, CoreMatchers.equalTo(JdbcConfigurationTest.SAMPLE_JDBC_CONFIGURATION));
   }
 }

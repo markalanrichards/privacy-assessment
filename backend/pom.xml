@@ -41,7 +41,6 @@
         <jetty.version>10.0.7</jetty.version>
         <junit.version>4.13.2</junit.version>
         <log4j.version>2.17.0</log4j.version>
-        <lombok.version>1.18.22</lombok.version>
         <mockito.version>4.2.0</mockito.version>
         <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
         <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
@@ -419,12 +418,6 @@
                 <groupId>org.eclipse.collections</groupId>
                 <artifactId>eclipse-collections-forkjoin</artifactId>
                 <version>${eclipse-collections.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>info.cukes</groupId>

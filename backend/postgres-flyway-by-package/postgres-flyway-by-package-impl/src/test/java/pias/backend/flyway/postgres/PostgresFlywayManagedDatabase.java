@@ -1,15 +1,14 @@
 package pias.backend.flyway.postgres;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Random;
 import org.junit.rules.ExternalResource;
 import org.skife.jdbi.v2.DBI;
 import org.testcontainers.containers.PostgreSQLContainer;
 import pias.backend.flyway.FlywayConfig;
 import pias.backend.flyway.FlywayJdbcConfig;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Random;
 
 public class PostgresFlywayManagedDatabase extends ExternalResource {
   private PostgreSQLContainer postgreSQLContainer;
@@ -43,18 +42,16 @@ public class PostgresFlywayManagedDatabase extends ExternalResource {
         DriverManager.getConnection(
             jdbcUrl, postgreSQLContainer.getUsername(), postgreSQLContainer.getPassword());
     dbi = new DBI(jdbcUrl, postgreSQLContainer.getUsername(), postgreSQLContainer.getPassword());
-    flywayManaged =
-        new PostgresFlywayManaged(
-            FlywayConfig.builder()
-                .flywayJdbcConfig(
-                    FlywayJdbcConfig.builder()
-                        .user(postgreSQLContainer.getUsername())
-                        .password(postgreSQLContainer.getPassword())
-                        .initSql(EMPTY_INIT_SQL)
-                        .jdbcUrl(jdbcUrl)
-                        .build())
-                .classForPackage(classForPackage)
-                .build());
+    final FlywayConfig flywayConfig =
+        new FlywayConfig(
+            new FlywayJdbcConfig(
+                jdbcUrl,
+                postgreSQLContainer.getUsername(),
+                postgreSQLContainer.getPassword(),
+                "",
+                30L),
+            classForPackage);
+    flywayManaged = new PostgresFlywayManaged(flywayConfig);
     flywayManaged.migrate();
   }
 

@@ -28,11 +28,11 @@ public class PIAServiceJaxRs implements PIAServiceInterfaceJaxRs {
 
   private PIAJaxRs piaJaxRsfromAvro(PIA customerProfile) {
 
-    final String id = String.valueOf(customerProfile.getId());
-    final String epoch = String.valueOf(customerProfile.getEpoch());
-    final String subjectProfileId = String.valueOf(customerProfile.getSubjectProfileId());
-    final String version = String.valueOf(customerProfile.getVersion());
-    final PIADocumentJaxRs document = piaDocumentJaxRsfromAvro(customerProfile.getDocument());
+    final String id = String.valueOf(customerProfile.id());
+    final String epoch = String.valueOf(customerProfile.epoch());
+    final String subjectProfileId = String.valueOf(customerProfile.subjectProfileId());
+    final String version = String.valueOf(customerProfile.version());
+    final PIADocumentJaxRs document = piaDocumentJaxRsfromAvro(customerProfile.document());
     return new PIAJaxRs(id, version, epoch, subjectProfileId, document);
   }
 
@@ -357,10 +357,8 @@ public class PIAServiceJaxRs implements PIAServiceInterfaceJaxRs {
     final ImmutableByteList serialisedDocument =
         piaAvprImpl.getSerialisedDocument(
             piaDocumentFromJaxRs(customerProfileCreateJaxRs.document()));
-    return PIACreate.builder()
-        .subjectProfileId(Long.valueOf(customerProfileCreateJaxRs.subjectProfileId()))
-        .document(serialisedDocument)
-        .build();
+    final Long subjectProfileId = Long.valueOf(customerProfileCreateJaxRs.subjectProfileId());
+    return new PIACreate(subjectProfileId, serialisedDocument);
   }
 
   @Override
@@ -371,14 +369,14 @@ public class PIAServiceJaxRs implements PIAServiceInterfaceJaxRs {
   }
 
   private PIAUpdate fromJaxRs(PIAUpdateJaxRs customerProfileUpdateJaxRs) {
-    return PIAUpdate.builder()
-        .subjectProfileId(Long.valueOf(customerProfileUpdateJaxRs.subjectProfileId()))
-        .id(Long.valueOf(customerProfileUpdateJaxRs.id()))
-        .lastVersion(Long.valueOf(customerProfileUpdateJaxRs.lastVersion()))
-        .document(
-            piaAvprImpl.getSerialisedDocument(
-                piaDocumentFromJaxRs(customerProfileUpdateJaxRs.document())))
-        .build();
+
+    final Long subjectProfileId = Long.valueOf(customerProfileUpdateJaxRs.subjectProfileId());
+    final Long id = Long.valueOf(customerProfileUpdateJaxRs.id());
+    final Long lastVersion = Long.valueOf(customerProfileUpdateJaxRs.lastVersion());
+    final ImmutableByteList document =
+        piaAvprImpl.getSerialisedDocument(
+            piaDocumentFromJaxRs(customerProfileUpdateJaxRs.document()));
+    return new PIAUpdate(lastVersion, id, subjectProfileId, document);
   }
 
   @Override

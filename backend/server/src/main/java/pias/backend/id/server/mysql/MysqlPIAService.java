@@ -1,5 +1,7 @@
 package pias.backend.id.server.mysql;
 
+import java.io.IOException;
+import org.eclipse.collections.api.list.primitive.ImmutableByteList;
 import org.eclipse.collections.impl.factory.primitive.ByteLists;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
@@ -8,8 +10,6 @@ import pias.backend.id.server.database.PIAService;
 import pias.backend.id.server.entity.PIA;
 import pias.backend.id.server.entity.PIACreate;
 import pias.backend.id.server.entity.PIAUpdate;
-
-import java.io.IOException;
 
 public class MysqlPIAService implements PIAService {
   private final DBI dbi;
@@ -76,11 +76,11 @@ public class MysqlPIAService implements PIAService {
                 + ",:"
                 + FIELD_DOCUMENT
                 + ")")
-        .bind(FIELD_ID, pia.getId())
-        .bind(FIELD_VERSION, pia.getVersion())
-        .bind(FIELD_EPOCH, pia.getEpoch())
-        .bind(FIELD_SUBJECT_PROFILE_ID, pia.getSubjectProfileId())
-        .bind(FIELD_DOCUMENT, pia.getDocument().toArray())
+        .bind(FIELD_ID, pia.id())
+        .bind(FIELD_VERSION, pia.version())
+        .bind(FIELD_EPOCH, pia.epoch())
+        .bind(FIELD_SUBJECT_PROFILE_ID, pia.subjectProfileId())
+        .bind(FIELD_DOCUMENT, pia.document().toArray())
         .execute();
   }
 
@@ -101,14 +101,11 @@ public class MysqlPIAService implements PIAService {
           final Long privacyImpactAssessmentAnnexOneID =
               insertNewPrivacyImpactAssessmentAnnexOneId(handle);
 
+          final long epoch = System.currentTimeMillis();
+          final ImmutableByteList document = piaDocument.document();
+          final Long subjectProfileId = Long.valueOf(piaDocument.subjectProfileId());
           final PIA pia =
-              PIA.builder()
-                  .version(0)
-                  .id(privacyImpactAssessmentAnnexOneID)
-                  .epoch(System.currentTimeMillis())
-                  .document(piaDocument.getDocument())
-                  .subjectProfileId(Long.valueOf(piaDocument.getSubjectProfileId()))
-                  .build();
+              new PIA(0, privacyImpactAssessmentAnnexOneID, subjectProfileId, epoch, document);
           insertNewCustomerProfile(handle, pia);
           return pia;
         });
@@ -141,13 +138,10 @@ public class MysqlPIAService implements PIAService {
         .map(
             (i, resultSet, statementContext) -> {
               byte[] bytes = resultSet.getBytes(FIELD_DOCUMENT);
-              return PIA.builder()
-                  .id(id)
-                  .version(version)
-                  .epoch(resultSet.getLong(FIELD_EPOCH))
-                  .subjectProfileId(resultSet.getLong(FIELD_SUBJECT_PROFILE_ID))
-                  .document(ByteLists.immutable.of(bytes))
-                  .build();
+              final long epoch = resultSet.getLong(FIELD_EPOCH);
+              final long subjectProfileId = resultSet.getLong(FIELD_SUBJECT_PROFILE_ID);
+              final ImmutableByteList document = ByteLists.immutable.of(bytes);
+              return new PIA(version, id, subjectProfileId, epoch, document);
             })
         .first();
   }
@@ -160,8 +154,8 @@ public class MysqlPIAService implements PIAService {
 
     return dbi.inTransaction(
         (handle, transactionStatus) -> {
-          final Long id = update.getId();
-          final Long lastVersion = update.getLastVersion();
+          final Long id = update.id();
+          final Long lastVersion = update.lastVersion();
           final long nextVersion = lastVersion + 1L;
           final long epoch = System.currentTimeMillis();
           final boolean updateVersionSuccess =
@@ -182,14 +176,11 @@ public class MysqlPIAService implements PIAService {
                       .execute()
                   == 1;
           if (updateVersionSuccess) {
-            final PIA customerProfile =
-                PIA.builder()
-                    .epoch(epoch)
-                    .id(update.getId())
-                    .version(nextVersion)
-                    .subjectProfileId(update.getSubjectProfileId())
-                    .document(update.getDocument())
-                    .build();
+
+            final long subjectProfileId = update.subjectProfileId();
+            final ImmutableByteList document = update.document();
+
+            final PIA customerProfile = new PIA(nextVersion, id, subjectProfileId, epoch, document);
             insertNewCustomerProfile(handle, customerProfile);
             return customerProfile;
           } else {

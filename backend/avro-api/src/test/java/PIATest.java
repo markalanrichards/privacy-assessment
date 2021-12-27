@@ -1,5 +1,5 @@
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -146,7 +146,7 @@ public class PIATest {
         privacyImpactAssessmentAnnexOneServiceAvroServiceExternalResource
             .getClient()
             .avroCreatePIA(privacyImpactAssessmentAnnexOneRequest);
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         actualPrivacyImpactAssessmentAnnexOne,
         CoreMatchers.equalTo(expectedPrivacyImpactAssessmentAnnexOne));
   }
@@ -162,7 +162,8 @@ public class PIATest {
         privacyImpactAssessmentAnnexOneServiceAvroServiceExternalResource
             .getClient()
             .avroUpdatePIA(privacyImpactAssessmentAnnexOneUpdate);
-    Assert.assertThat(actualPrivacyImpactAssessmentAnnexOne, CoreMatchers.equalTo(expectedUpdate));
+    MatcherAssert.assertThat(
+        actualPrivacyImpactAssessmentAnnexOne, CoreMatchers.equalTo(expectedUpdate));
   }
 
   @Test
@@ -177,6 +178,7 @@ public class PIATest {
         privacyImpactAssessmentAnnexOneServiceAvroServiceExternalResource
             .getClient()
             .avroReadPIA(id);
-    Assert.assertThat(actualPrivacyImpactAssessmentAnnexOne, CoreMatchers.equalTo(expectedUpdate));
+    MatcherAssert.assertThat(
+        actualPrivacyImpactAssessmentAnnexOne, CoreMatchers.equalTo(expectedUpdate));
   }
 }

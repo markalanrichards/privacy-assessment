@@ -1,5 +1,5 @@
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -54,7 +54,7 @@ public class SubjectProfileTest {
         productProfileServiceAvroServiceExternalResource
             .getClient()
             .avroCreateSubjectProfile(productProfileRequest);
-    Assert.assertThat(actualSubjectProfile, CoreMatchers.equalTo(expectedSubjectProfile));
+    MatcherAssert.assertThat(actualSubjectProfile, CoreMatchers.equalTo(expectedSubjectProfile));
   }
 
   @Test
@@ -68,7 +68,7 @@ public class SubjectProfileTest {
         productProfileServiceAvroServiceExternalResource
             .getClient()
             .avroUpdateSubjectProfile(productProfileUpdate);
-    Assert.assertThat(actualSubjectProfile, CoreMatchers.equalTo(expectedUpdate));
+    MatcherAssert.assertThat(actualSubjectProfile, CoreMatchers.equalTo(expectedUpdate));
   }
 
   @Test
@@ -81,6 +81,6 @@ public class SubjectProfileTest {
         .avroReadSubjectProfile(id);
     SubjectProfileAvro actualSubjectProfile =
         productProfileServiceAvroServiceExternalResource.getClient().avroReadSubjectProfile(id);
-    Assert.assertThat(actualSubjectProfile, CoreMatchers.equalTo(expectedUpdate));
+    MatcherAssert.assertThat(actualSubjectProfile, CoreMatchers.equalTo(expectedUpdate));
   }
 }

@@ -1,15 +1,14 @@
 package pias.backend.flyway.mysql;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Random;
 import org.junit.rules.ExternalResource;
 import org.skife.jdbi.v2.DBI;
 import org.testcontainers.containers.MySQLContainer;
 import pias.backend.flyway.FlywayConfig;
 import pias.backend.flyway.FlywayJdbcConfig;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Random;
 
 public class MysqlFlywayManagedDatabase extends ExternalResource {
   private MySQLContainer mySQLContainer;
@@ -45,18 +44,12 @@ public class MysqlFlywayManagedDatabase extends ExternalResource {
         DriverManager.getConnection(
             this.jdbcUrl, mySQLContainer.getUsername(), mySQLContainer.getPassword());
     dbi = new DBI(this.jdbcUrl, mySQLContainer.getUsername(), mySQLContainer.getPassword());
-    mysqlFlywayManaged =
-        new MysqlFlywayManaged(
-            FlywayConfig.builder()
-                .flywayJdbcConfig(
-                    FlywayJdbcConfig.builder()
-                        .user(mySQLContainer.getUsername())
-                        .password(mySQLContainer.getPassword())
-                        //                        .initSql(EMPTY_INIT_SQL)
-                        .jdbcUrl(this.jdbcUrl)
-                        .build())
-                .classForPackage(classForPackage)
-                .build());
+    final FlywayConfig flywayConfig =
+        new FlywayConfig(
+            new FlywayJdbcConfig(
+                this.jdbcUrl, mySQLContainer.getUsername(), mySQLContainer.getPassword(), "", 30L),
+            classForPackage);
+    mysqlFlywayManaged = new MysqlFlywayManaged(flywayConfig);
     mysqlFlywayManaged.migrate();
   }
 

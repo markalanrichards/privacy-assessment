@@ -3,7 +3,7 @@ package pias.backend.id.server.entity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,13 +18,13 @@ public class PrivacyConfigurationTest {
   public static final String SAMPLE_HOSTNAME = "SAMPLE_HOSTNAME";
   public static final String SAMPLE_DATABASE = "SAMPLE_DATABASE";
   public static final int SAMPLE_PORT = 1;
+
   public static final PrivacyConfiguration SAMPLE_PRIVACY_CONFIGURATION =
-      PrivacyConfiguration.builder()
-          .port(SAMPLE_PORT)
-          .serverJdbcConfiguration(JdbcConfigurationTest.SAMPLE_JDBC_CONFIGURATION)
-          .hostname(SAMPLE_HOSTNAME)
-          .database(SAMPLE_DATABASE)
-          .build();
+      new PrivacyConfiguration(
+          SAMPLE_PORT,
+          SAMPLE_HOSTNAME,
+          JdbcConfigurationTest.SAMPLE_JDBC_CONFIGURATION,
+          SAMPLE_DATABASE);
 
   private PrivacyConfigurationMapper privacyConfigurationMapper;
   @Mock private JdbcConfigurationMapper jdbcConfigurationMapper;
@@ -48,6 +48,6 @@ public class PrivacyConfigurationTest {
     final ObjectNode jsonNodes =
         privacyConfigurationMapper.toJsonObject(SAMPLE_PRIVACY_CONFIGURATION);
     final PrivacyConfiguration back = privacyConfigurationMapper.toPrivacyConfiguration(jsonNodes);
-    Assert.assertThat(back, CoreMatchers.equalTo(SAMPLE_PRIVACY_CONFIGURATION));
+    MatcherAssert.assertThat(back, CoreMatchers.equalTo(SAMPLE_PRIVACY_CONFIGURATION));
   }
 }

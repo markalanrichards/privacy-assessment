@@ -13,9 +13,7 @@ public class MigrationConfigMapper {
   }
 
   public MigrationConfig fromJson(JsonNode jsonNode) {
-    return MigrationConfig.builder()
-        .server(flywayConfigMapper.fromJson(jsonNode.get(SERVER)))
-        .database(jsonNode.get(DATABASE).asText())
-        .build();
+    return new MigrationConfig(
+        flywayConfigMapper.fromJson(jsonNode.get(SERVER)), jsonNode.get(DATABASE).asText());
   }
 }

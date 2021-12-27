@@ -2,15 +2,14 @@ package pias.backend.id.server.jaxrs;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import java.util.Set;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.core.Application;
 import org.eclipse.collections.impl.factory.Sets;
 import pias.backend.id.server.avro.PIAAvprImpl;
 import pias.backend.id.server.database.CustomerProfileService;
 import pias.backend.id.server.database.PIAService;
 import pias.backend.id.server.database.SubjectProfileService;
-
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.Set;
 
 @ApplicationPath("rest")
 public class PIASApplication extends Application {

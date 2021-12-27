@@ -2,7 +2,6 @@ package pias.avro.cli;
 
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-
 import java.util.Optional;
 
 @Parameters(commandDescription = "get a customer")

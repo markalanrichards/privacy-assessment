@@ -1,14 +1,14 @@
 package pias.backend.flyway;
 
-import lombok.extern.slf4j.Slf4j;
-import pias.backend.flyway.model.MigrationConfig;
-
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import pias.backend.flyway.model.MigrationConfig;
 
-@Slf4j
 public class Migrator implements Consumer<MigrationConfig> {
+  private static final Logger LOGGER = LogManager.getLogger(Migrator.class);
   final Function<MigrationConfig, FlywayManaged> generateFlyway;
 
   public Migrator(Function<MigrationConfig, FlywayManaged> generateFlyway) {
@@ -17,10 +17,10 @@ public class Migrator implements Consumer<MigrationConfig> {
 
   @Override
   public void accept(MigrationConfig migrationConfig) {
-    log.error("Starting migration");
+    LOGGER.error("Starting migration");
 
     final FlywayManaged flywayManaged = generateFlyway.apply(migrationConfig);
     Stream.of(flywayManaged).forEach(FlywayManaged::migrate);
-    log.error("Stopping migration");
+    LOGGER.error("Stopping migration");
   }
 }

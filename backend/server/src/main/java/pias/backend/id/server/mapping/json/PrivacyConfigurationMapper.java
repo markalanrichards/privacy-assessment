@@ -22,25 +22,25 @@ public class PrivacyConfigurationMapper {
 
   public ObjectNode toJsonObject(final PrivacyConfiguration privacyConfiguration) {
     final JdbcConfiguration contextJdbcConfiguration =
-        privacyConfiguration.getServerJdbcConfiguration();
-    final String hostname = privacyConfiguration.getHostname();
-    final int port = privacyConfiguration.getPort();
+        privacyConfiguration.serverJdbcConfiguration();
+    final String hostname = privacyConfiguration.hostname();
+    final int port = privacyConfiguration.port();
     final ObjectNode objectNode = objectMapper.createObjectNode();
     objectNode.put(PORT, String.valueOf(port));
     objectNode.put(HOSTNAME, String.valueOf(hostname));
     objectNode.set(
         SERVER_JDBC_CONFIGURATION, jdbcConfigurationMapper.toJsonObject(contextJdbcConfiguration));
-    objectNode.put(DATABASE, privacyConfiguration.getDatabase());
+    objectNode.put(DATABASE, privacyConfiguration.database());
     return objectNode;
   }
 
   public PrivacyConfiguration toPrivacyConfiguration(final ObjectNode objectNode) {
-    return PrivacyConfiguration.builder()
-        .database(objectNode.get(DATABASE).asText())
-        .serverJdbcConfiguration(
-            jdbcConfigurationMapper.toJdbcConfiguration(objectNode.with(SERVER_JDBC_CONFIGURATION)))
-        .hostname(objectNode.get(HOSTNAME).asText())
-        .port(objectNode.get(PORT).asInt())
-        .build();
+
+    final String database = objectNode.get(DATABASE).asText();
+    final JdbcConfiguration serverJdbcConfiguration =
+        jdbcConfigurationMapper.toJdbcConfiguration(objectNode.with(SERVER_JDBC_CONFIGURATION));
+    final String hostname = objectNode.get(HOSTNAME).asText();
+    final int port = objectNode.get(PORT).asInt();
+    return new PrivacyConfiguration(port, hostname, serverJdbcConfiguration, database);
   }
 }

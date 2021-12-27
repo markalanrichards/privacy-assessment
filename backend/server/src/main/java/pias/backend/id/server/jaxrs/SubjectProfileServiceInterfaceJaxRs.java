@@ -1,10 +1,9 @@
 package pias.backend.id.server.jaxrs;
 
+import javax.ws.rs.*;
 import pias.backend.id.server.jaxrs.model.SubjectProfileCreateJaxRs;
 import pias.backend.id.server.jaxrs.model.SubjectProfileJaxRs;
 import pias.backend.id.server.jaxrs.model.SubjectProfileUpdateJaxRs;
-
-import javax.ws.rs.*;
 
 @Path("subject-profile")
 public interface SubjectProfileServiceInterfaceJaxRs {

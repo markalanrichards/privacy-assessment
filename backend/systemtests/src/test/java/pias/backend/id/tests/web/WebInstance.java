@@ -28,18 +28,12 @@ public class WebInstance extends ExternalResource {
     final FlywayJdbcConfig flywayJdbcConfig = databaseHandle.getFlywayJdbcConfig();
     LOGGER.info("Context jdbc {}", flywayJdbcConfig);
 
+    final String database = "mysql";
+    final JdbcConfiguration jdbcConfiguration =
+        new JdbcConfiguration(
+            flywayJdbcConfig.jdbcUrl(), flywayJdbcConfig.user(), flywayJdbcConfig.password());
     final PrivacyConfiguration privacyConfiguration =
-        PrivacyConfiguration.builder()
-            .port(port)
-            .hostname(hostname)
-            .database("mysql")
-            .serverJdbcConfiguration(
-                JdbcConfiguration.builder()
-                    .jdbcUrl(flywayJdbcConfig.getJdbcUrl())
-                    .jdbcPassword(flywayJdbcConfig.getPassword())
-                    .jdbcUsername(flywayJdbcConfig.getUser())
-                    .build())
-            .build();
+        new PrivacyConfiguration(port, hostname, jdbcConfiguration, database);
     privacyServer = new PrivacyServer(privacyConfiguration);
     instance = WebClient.createInstance(privacyServer);
   }

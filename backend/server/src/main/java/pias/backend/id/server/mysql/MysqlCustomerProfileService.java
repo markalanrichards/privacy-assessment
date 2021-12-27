@@ -1,6 +1,7 @@
 package pias.backend.id.server.mysql;
 
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Handle;
 import org.skife.jdbi.v2.TransactionCallback;
@@ -11,8 +12,8 @@ import pias.backend.id.server.entity.CustomerProfile;
 import pias.backend.id.server.entity.CustomerProfileCreate;
 import pias.backend.id.server.entity.CustomerProfileUpdate;
 
-@Log4j2
 public class MysqlCustomerProfileService implements CustomerProfileService {
+  private static final Logger LOGGER = LogManager.getLogger(MysqlCustomerProfileService.class);
   public static final String TABLE_CUSTOMER_PROFILES = "customer_profiles";
   public static final String TABLE_CUSTOMER_PROFILE_IDS = "customer_profile_ids";
 
@@ -66,7 +67,7 @@ public class MysqlCustomerProfileService implements CustomerProfileService {
   }
 
   public CustomerProfile read(long id) {
-    log.debug("Reading {}", id);
+    LOGGER.debug("Reading {}", id);
     return dbi.inTransaction(
         (handle, transactionStatus) -> {
           final long version = selectVersionForId(id, handle);
@@ -80,14 +81,13 @@ public class MysqlCustomerProfileService implements CustomerProfileService {
         .bind(FIELD_ID, id)
         .bind(FIELD_VERSION, version)
         .map(
-            (i, resultSet, statementContext) ->
-                CustomerProfile.builder()
-                    .externalEmail(resultSet.getString(FIELD_EXTERNAL_EMAIL))
-                    .externalLegalEntity(resultSet.getString(FIELD_EXTERNAL_LEGAL_ENTITY))
-                    .id(id)
-                    .version(version)
-                    .epoch(resultSet.getLong(FIELD_EPOCH))
-                    .build())
+            (i, resultSet, statementContext) -> {
+              final String externalEmail = resultSet.getString(FIELD_EXTERNAL_EMAIL);
+              final String externalLegalEntity = resultSet.getString(FIELD_EXTERNAL_LEGAL_ENTITY);
+              final long epoch = resultSet.getLong(FIELD_EPOCH);
+
+              return new CustomerProfile(id, version, epoch, externalEmail, externalLegalEntity);
+            })
         .first();
   }
 
@@ -100,37 +100,33 @@ public class MysqlCustomerProfileService implements CustomerProfileService {
   }
 
   public CustomerProfile create(CustomerProfileCreate customerProfileCreate) {
-    log.debug("Creating {}", customerProfileCreate);
+    LOGGER.debug("Creating {}", customerProfileCreate);
     final CustomerProfile created =
         dbi.inTransaction(
             (handle, transactionStatus) -> {
-              final String externalEmail = customerProfileCreate.getExternalEmail();
-              final String externalLegalEntity = customerProfileCreate.getExternalLegalEntity();
+              final String externalEmail = customerProfileCreate.externalEmail();
+              final String externalLegalEntity = customerProfileCreate.externalLegalEntity();
               final Long customerProfileId = insertNewCustomerProfileId(handle);
               final long epoch = System.currentTimeMillis();
+
               final CustomerProfile customerProfile =
-                  CustomerProfile.builder()
-                      .version(0)
-                      .id(customerProfileId)
-                      .externalLegalEntity(externalLegalEntity)
-                      .externalEmail(externalEmail)
-                      .epoch(epoch)
-                      .build();
+                  new CustomerProfile(
+                      customerProfileId, 0, epoch, externalEmail, externalLegalEntity);
               insertNewCustomerProfile(handle, customerProfile);
               return customerProfile;
             });
-    log.debug("Created {}", created);
+    LOGGER.debug("Created {}", created);
     return created;
   }
 
   private void insertNewCustomerProfile(Handle handle, CustomerProfile customerProfile) {
     handle
         .createStatement(INSERT_NEW_CUSTOMER_PROFILE)
-        .bind(FIELD_EXTERNAL_EMAIL, customerProfile.getExternalEmail())
-        .bind(FIELD_EXTERNAL_LEGAL_ENTITY, customerProfile.getExternalLegalEntity())
-        .bind(FIELD_ID, customerProfile.getId())
-        .bind(FIELD_EPOCH, customerProfile.getEpoch())
-        .bind(FIELD_VERSION, customerProfile.getVersion())
+        .bind(FIELD_EXTERNAL_EMAIL, customerProfile.externalEmail())
+        .bind(FIELD_EXTERNAL_LEGAL_ENTITY, customerProfile.externalLegalEntity())
+        .bind(FIELD_ID, customerProfile.id())
+        .bind(FIELD_EPOCH, customerProfile.epoch())
+        .bind(FIELD_VERSION, customerProfile.version())
         .execute();
   }
 
@@ -146,8 +142,8 @@ public class MysqlCustomerProfileService implements CustomerProfileService {
   public CustomerProfile update(CustomerProfileUpdate update) {
     return dbi.inTransaction(
         (handle, transactionStatus) -> {
-          final Long id = update.getId();
-          final Long lastVersion = update.getLastVersion();
+          final Long id = update.id();
+          final Long lastVersion = update.lastVersion();
           final long nextVersion = lastVersion + 1L;
           final long epoch = System.currentTimeMillis();
           final boolean updateVersionSuccess =
@@ -168,14 +164,12 @@ public class MysqlCustomerProfileService implements CustomerProfileService {
                       .execute()
                   == 1;
           if (updateVersionSuccess) {
+
+            final String externalEmail = update.externalEmail();
+            final String externalLegalEntity = update.externalLegalEntity();
+
             final CustomerProfile customerProfile =
-                CustomerProfile.builder()
-                    .epoch(epoch)
-                    .externalEmail(update.getExternalEmail())
-                    .externalLegalEntity(update.getExternalLegalEntity())
-                    .id(update.getId())
-                    .version(nextVersion)
-                    .build();
+                new CustomerProfile(id, nextVersion, epoch, externalEmail, externalLegalEntity);
             insertNewCustomerProfile(handle, customerProfile);
             return customerProfile;
           } else {

@@ -1,10 +1,9 @@
 package pias.backend.id.server.jaxrs;
 
+import javax.ws.rs.*;
 import pias.backend.id.server.jaxrs.model.PIACreateJaxRs;
 import pias.backend.id.server.jaxrs.model.PIAJaxRs;
 import pias.backend.id.server.jaxrs.model.PIAUpdateJaxRs;
-
-import javax.ws.rs.*;
 
 @Path("pia-annex-one")
 public interface PIAServiceInterfaceJaxRs {

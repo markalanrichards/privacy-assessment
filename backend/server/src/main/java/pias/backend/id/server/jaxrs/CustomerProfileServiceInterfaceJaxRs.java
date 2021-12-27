@@ -1,10 +1,9 @@
 package pias.backend.id.server.jaxrs;
 
+import javax.ws.rs.*;
 import pias.backend.id.server.jaxrs.model.CustomerProfileCreateJaxRs;
 import pias.backend.id.server.jaxrs.model.CustomerProfileJaxRs;
 import pias.backend.id.server.jaxrs.model.CustomerProfileUpdateJaxRs;
-
-import javax.ws.rs.*;
 
 @Path("customer-profile")
 public interface CustomerProfileServiceInterfaceJaxRs {

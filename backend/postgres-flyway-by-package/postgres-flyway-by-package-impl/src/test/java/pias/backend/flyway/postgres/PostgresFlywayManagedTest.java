@@ -1,5 +1,7 @@
 package pias.backend.flyway.postgres;
 
+import java.sql.SQLException;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
@@ -7,9 +9,6 @@ import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Query;
 import org.skife.jdbi.v2.Update;
 import org.skife.jdbi.v2.util.LongColumnMapper;
-
-import java.sql.SQLException;
-import java.util.Map;
 
 public class PostgresFlywayManagedTest {
 

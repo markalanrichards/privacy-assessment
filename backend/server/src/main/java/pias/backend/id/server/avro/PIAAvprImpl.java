@@ -1,5 +1,7 @@
 package pias.backend.id.server.avro;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.EncoderFactory;
@@ -12,9 +14,6 @@ import pias.backend.id.server.database.PIAService;
 import pias.backend.id.server.entity.PIA;
 import pias.backend.id.server.entity.PIACreate;
 import pias.backend.id.server.entity.PIAUpdate;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 public class PIAAvprImpl implements PIAAvpr {
   private final PIAService mysqlPiaService;
@@ -30,15 +29,11 @@ public class PIAAvprImpl implements PIAAvpr {
 
   @Override
   public PIAAvro avroCreatePIA(PIACreateAvro request) {
-    PIADocumentAvro document = request.getDocument();
-    ImmutableByteList of = getSerialisedDocument(document);
-    String subjectProfileId = request.getSubjectProfileId();
-    final PIA pia =
-        mysqlPiaService.create(
-            PIACreate.builder()
-                .subjectProfileId(Long.valueOf(subjectProfileId))
-                .document(of)
-                .build());
+    PIADocumentAvro piaDocumentAvro = request.getDocument();
+    ImmutableByteList document = getSerialisedDocument(piaDocumentAvro);
+    final Long subjectProfileId = Long.valueOf(request.getSubjectProfileId());
+    final PIACreate piaCreate = new PIACreate(subjectProfileId, document);
+    final PIA pia = mysqlPiaService.create(piaCreate);
     return convertToPIAAvro(pia);
   }
 
@@ -55,14 +50,14 @@ public class PIAAvprImpl implements PIAAvpr {
   }
 
   private PIAAvro convertToPIAAvro(PIA pia) {
-    final ImmutableByteList document = pia.getDocument();
+    final ImmutableByteList document = pia.document();
     final PIADocumentAvro read = getPiaDocumentAvro(document);
     return PIAAvro.newBuilder()
-        .setId(String.valueOf(pia.getId()))
+        .setId(String.valueOf(pia.id()))
         .setDocument(read)
-        .setVersion(String.valueOf(pia.getVersion()))
-        .setEpoch(String.valueOf(pia.getEpoch()))
-        .setSubjectProfileId(String.valueOf(pia.getSubjectProfileId()))
+        .setVersion(String.valueOf(pia.version()))
+        .setEpoch(String.valueOf(pia.epoch()))
+        .setSubjectProfileId(String.valueOf(pia.subjectProfileId()))
         .build();
   }
 
@@ -78,15 +73,13 @@ public class PIAAvprImpl implements PIAAvpr {
 
   @Override
   public PIAAvro avroUpdatePIA(PIAUpdateAvro update) {
-    PIADocumentAvro document = update.getDocument();
-    ImmutableByteList of = getSerialisedDocument(document);
-    PIAUpdate piaUpdate =
-        PIAUpdate.builder()
-            .document(of)
-            .id(Long.valueOf(update.getId()))
-            .lastVersion(Long.valueOf(update.getLastVersion()))
-            .subjectProfileId(Long.valueOf(update.getSubjectProfileId()))
-            .build();
+    PIADocumentAvro piaDocumentAvro = update.getDocument();
+    ImmutableByteList document = getSerialisedDocument(piaDocumentAvro);
+
+    final Long id = Long.valueOf(update.getId());
+    final Long lastVersion = Long.valueOf(update.getLastVersion());
+    final Long subjectProfileId = Long.valueOf(update.getSubjectProfileId());
+    PIAUpdate piaUpdate = new PIAUpdate(lastVersion, id, subjectProfileId, document);
     final PIA pia = mysqlPiaService.update(piaUpdate);
     return convertToPIAAvro(pia);
   }

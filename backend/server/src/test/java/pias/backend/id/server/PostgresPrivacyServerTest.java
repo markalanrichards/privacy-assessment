@@ -1,7 +1,13 @@
 package pias.backend.id.server;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.concurrent.CompletableFuture;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
@@ -21,13 +27,6 @@ import pias.backend.id.server.jaxrs.CustomerProfileServiceInterfaceJaxRs;
 import pias.backend.id.server.jaxrs.PIAServiceInterfaceJaxRs;
 import pias.backend.id.server.jaxrs.SubjectProfileServiceInterfaceJaxRs;
 import pias.backend.id.server.jaxrs.model.*;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.concurrent.CompletableFuture;
-
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
 
 public class PostgresPrivacyServerTest {
   PostgreSQLContainer postgreSQLContainer;
@@ -50,28 +49,18 @@ public class PostgresPrivacyServerTest {
     final String jdbcUrl = postgreSQLContainer.getJdbcUrl();
     serverConnection = DriverManager.getConnection(jdbcUrl, username, password);
     final FlywayJdbcConfig flywayJdbcConfig;
-    flywayJdbcConfig =
-        FlywayJdbcConfig.builder().jdbcUrl(jdbcUrl).user(username).password(password).build();
-    flywayManaged =
-        new PostgresFlywayManaged(
-            FlywayConfig.builder()
-                .flywayJdbcConfig(flywayJdbcConfig)
-                .classForPackage(PostgresMigrator.class)
-                .build());
+    flywayJdbcConfig = new FlywayJdbcConfig(jdbcUrl, username, password, "", 30L);
+    final FlywayConfig flywayConfig = new FlywayConfig(flywayJdbcConfig, PostgresMigrator.class);
+    flywayManaged = new PostgresFlywayManaged(flywayConfig);
     flywayManaged.migrate();
+
+    final String hostname = "127.0.0.1";
+    final int port = 0;
+    final String database = "postgres";
+    final JdbcConfiguration jdbcConfiguration = new JdbcConfiguration(jdbcUrl, username, password);
+
     privacyServer =
-        new PrivacyServer(
-            PrivacyConfiguration.builder()
-                .hostname("127.0.0.1")
-                .port(0)
-                .database("postgres")
-                .serverJdbcConfiguration(
-                    JdbcConfiguration.builder()
-                        .jdbcUrl(jdbcUrl)
-                        .jdbcUsername(username)
-                        .jdbcPassword(password)
-                        .build())
-                .build());
+        new PrivacyServer(new PrivacyConfiguration(port, hostname, jdbcConfiguration, database));
     customerProfileJaxrs =
         JAXRSClientFactory.create(
             String.format("http://127.0.0.1:%s/rest", privacyServer.getPort()),

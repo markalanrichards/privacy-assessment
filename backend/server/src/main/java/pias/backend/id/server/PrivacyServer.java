@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.zaxxer.hikari.HikariDataSource;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import javax.servlet.Servlet;
 import org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,11 +40,6 @@ import pias.backend.id.server.postgres.PostgresSubjectProfileService;
 import pias.backend.id.server.servlets.AvroServlets;
 import pias.backend.id.server.servlets.PingServlet;
 
-import javax.servlet.Servlet;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-
 public class PrivacyServer implements AutoCloseable {
   private final Server server;
   private static final Logger LOGGER = LogManager.getLogger(PrivacyServer.class);
@@ -48,12 +47,12 @@ public class PrivacyServer implements AutoCloseable {
 
   public PrivacyServer(final PrivacyConfiguration privacyConfiguration) {
     Slf4jRequestLogWriter slf4jRequestLogWriter = new Slf4jRequestLogWriter();
-    hostname = privacyConfiguration.getHostname();
+    hostname = privacyConfiguration.hostname();
     server = new Server();
     final ServletHandler handler = new ServletHandler();
     final ServerConnector serverConnector = new ServerConnector(server);
     serverConnector.setHost(hostname);
-    serverConnector.setPort(privacyConfiguration.getPort());
+    serverConnector.setPort(privacyConfiguration.port());
     server.setConnectors(new Connector[] {serverConnector});
     server.setHandler(handler);
     final CustomRequestLog customRequestLog =
@@ -66,14 +65,14 @@ public class PrivacyServer implements AutoCloseable {
     server.setErrorHandler(errorHandler);
 
     final HikariDataSource serverDataSource =
-        createHikariDataSource(privacyConfiguration.getServerJdbcConfiguration());
+        createHikariDataSource(privacyConfiguration.serverJdbcConfiguration());
 
     final DBI serverDbi = new DBI(serverDataSource);
 
     final CustomerProfileService mysqlCustomerProfileService;
     final SubjectProfileService mysqlSubjectProfileService;
     final PIAService mysqlPiaService;
-    switch (privacyConfiguration.getDatabase()) {
+    switch (privacyConfiguration.database()) {
       case "mysql":
         mysqlCustomerProfileService = new MysqlCustomerProfileService(serverDbi);
         mysqlPiaService = new MysqlPIAService(serverDbi);
@@ -119,9 +118,9 @@ public class PrivacyServer implements AutoCloseable {
 
   private HikariDataSource createHikariDataSource(final JdbcConfiguration jdbcConfiguration) {
     final HikariDataSource ds = new HikariDataSource();
-    ds.setJdbcUrl(jdbcConfiguration.getJdbcUrl());
-    ds.setUsername(jdbcConfiguration.getJdbcUsername());
-    ds.setPassword(jdbcConfiguration.getJdbcPassword());
+    ds.setJdbcUrl(jdbcConfiguration.jdbcUrl());
+    ds.setUsername(jdbcConfiguration.jdbcUsername());
+    ds.setPassword(jdbcConfiguration.jdbcPassword());
     return ds;
   }
 

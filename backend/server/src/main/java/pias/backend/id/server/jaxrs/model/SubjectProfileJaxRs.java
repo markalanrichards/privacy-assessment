@@ -11,24 +11,22 @@ public record SubjectProfileJaxRs(
     String customerProfileId) {
 
   public SubjectProfile fromJaxRs() {
-    return SubjectProfile.builder()
-        .version(Long.valueOf(version))
-        .id(Long.valueOf(id))
-        .epoch(Long.valueOf(epoch))
-        .customerProfileId(Long.valueOf(customerProfileId))
-        .externalSubjectReference(externalSubjectReference)
-        .externalSubjectName(externalSubjectName)
-        .build();
+    final Long version = Long.valueOf(this.version);
+    final Long id = Long.valueOf(this.id);
+    final Long epoch = Long.valueOf(this.epoch);
+    final Long customerProfileId = Long.valueOf(this.customerProfileId);
+    return new SubjectProfile(
+        id, version, epoch, customerProfileId, externalSubjectName, externalSubjectReference);
   }
 
   public static SubjectProfileJaxRs toJaxRs(SubjectProfile subjectProfile) {
 
-    final String epoch = String.valueOf(subjectProfile.getEpoch());
-    final String id = String.valueOf(subjectProfile.getId());
-    final String customerProfileId = String.valueOf(subjectProfile.getCustomerProfileId());
-    final String version = String.valueOf(subjectProfile.getVersion());
-    final String externalSubjectName = subjectProfile.getExternalSubjectName();
-    final String externalSubjectReference = subjectProfile.getExternalSubjectReference();
+    final String epoch = String.valueOf(subjectProfile.epoch());
+    final String id = String.valueOf(subjectProfile.id());
+    final String customerProfileId = String.valueOf(subjectProfile.customerProfileId());
+    final String version = String.valueOf(subjectProfile.version());
+    final String externalSubjectName = subjectProfile.externalSubjectName();
+    final String externalSubjectReference = subjectProfile.externalSubjectReference();
     return new SubjectProfileJaxRs(
         externalSubjectReference, externalSubjectName, id, version, epoch, customerProfileId);
   }

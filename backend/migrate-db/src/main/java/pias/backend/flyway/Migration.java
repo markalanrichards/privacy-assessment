@@ -4,18 +4,15 @@ import com.beust.jcommander.JCommander;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import pias.backend.flyway.mapper.FlywayConfigMapper;
 import pias.backend.flyway.mapper.MigrationConfigMapper;
 import pias.backend.flyway.model.MigrationConfig;
 import pias.backend.flyway.mysql.MysqlMigrator;
 import pias.backend.flyway.postgres.PostgresMigrator;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
-
-@Slf4j
 public class Migration {
 
   public static void main(String args[]) throws IOException {
@@ -29,7 +26,7 @@ public class Migration {
     final MigrationConfigMapper migrationConfigMapper =
         new MigrationConfigMapper(new FlywayConfigMapper());
     final MigrationConfig migrationConfig = migrationConfigMapper.fromJson(objectNode);
-    switch (migrationConfig.getDatabase()) {
+    switch (migrationConfig.database()) {
       case "mysql":
         new MysqlMigrator().accept(migrationConfig);
         break;

@@ -1,6 +1,8 @@
 package pias.avro.cli;
 
 import com.beust.jcommander.JCommander;
+import java.io.IOException;
+import java.net.URL;
 import org.apache.avro.Protocol;
 import org.apache.avro.ipc.HttpTransceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
@@ -8,9 +10,6 @@ import pias.backend.PIAAvpr;
 import pias.backend.avro.CustomerProfileAvpr;
 import pias.backend.avro.CustomerProfileAvro;
 import pias.backend.avro.SubjectProfileAvpr;
-
-import java.io.IOException;
-import java.net.URL;
 
 public class App {
   static CustomerProfileAvpr customerProfileAvpr =

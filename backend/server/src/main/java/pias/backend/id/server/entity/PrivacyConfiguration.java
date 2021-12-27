@@ -1,17 +1,4 @@
 package pias.backend.id.server.entity;
 
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.Value;
-
-@Value
-@EqualsAndHashCode
-@ToString
-@Builder
-public class PrivacyConfiguration {
-  int port;
-  String hostname;
-  JdbcConfiguration serverJdbcConfiguration;
-  String database;
-}
+public record PrivacyConfiguration(
+    int port, String hostname, JdbcConfiguration serverJdbcConfiguration, String database) {}

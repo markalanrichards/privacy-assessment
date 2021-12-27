@@ -10,12 +10,11 @@ public record SubjectProfileUpdateJaxRs(
     String customerProfileId) {
 
   public SubjectProfileUpdate fromJaxRs() {
-    return SubjectProfileUpdate.builder()
-        .lastVersion(Long.valueOf(lastVersion))
-        .id(Long.valueOf(id))
-        .customerProfileId(Long.valueOf(customerProfileId))
-        .externalSubjectName(externalSubjectName)
-        .externalSubjectReference(externalSubjectReference)
-        .build();
+
+    final Long lastVersion = Long.valueOf(this.lastVersion);
+    final Long id = Long.valueOf(this.id);
+    final Long customerProfileId = Long.valueOf(this.customerProfileId);
+    return new SubjectProfileUpdate(
+        id, lastVersion, customerProfileId, externalSubjectName, externalSubjectReference);
   }
 }

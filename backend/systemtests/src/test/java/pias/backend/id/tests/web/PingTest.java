@@ -1,13 +1,13 @@
 package pias.backend.id.tests.web;
 
+import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
+import pias.backend.id.test.main.web.UrlHelper;
 import pias.backend.id.test.main.web.model.RequestPojo;
 import pias.backend.id.test.main.web.model.ResponsePojo;
 import pias.backend.id.test.main.web.model.WebClient;
-
-import java.util.Optional;
 
 public class PingTest {
   @Rule public WebInstance webInstance = new WebInstance();
@@ -15,15 +15,18 @@ public class PingTest {
   @Test
   public void pingTest() throws Exception {
     final WebClient instance = webInstance.webClient();
-
-    final ResponsePojo responsePojo =
-        instance.makeRequest(
-            RequestPojo.builder()
-                .method("GET")
-                .uri(
-                    instance.getUrlHelper().toBuilder().path(Optional.of("/ping")).build().getUrl())
-                .build());
-    Assert.assertEquals(
-        responsePojo, ResponsePojo.builder().code(200).body(Optional.of("pong")).build());
+    final UrlHelper base = instance.getUrlHelper();
+    final UrlHelper url =
+        new UrlHelper(
+            base.fragment(),
+            base.query(),
+            "/ping",
+            base.port(),
+            base.host(),
+            base.scheme(),
+            base.userInfo());
+    final RequestPojo requestPojo = new RequestPojo(Optional.empty(), url.getUrl(), "GET");
+    final ResponsePojo responsePojo = instance.makeRequest(requestPojo);
+    Assert.assertEquals(responsePojo, new ResponsePojo(Optional.of("pong"), 200));
   }
 }

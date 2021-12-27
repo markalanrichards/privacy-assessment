@@ -1,6 +1,7 @@
 package pias.backend.id.server.postgres;
 
-import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.impl.factory.Lists;
 import org.skife.jdbi.v2.DBI;
@@ -11,8 +12,8 @@ import pias.backend.id.server.entity.SubjectProfile;
 import pias.backend.id.server.entity.SubjectProfileCreate;
 import pias.backend.id.server.entity.SubjectProfileUpdate;
 
-@Log4j2
 public class PostgresSubjectProfileService implements SubjectProfileService {
+  private static final Logger LOGGER = LogManager.getLogger(PostgresSubjectProfileService.class);
   public static final String FIELD_VERSION = "subject_profile_version";
   public static final String FIELD_ID = "subject_profile_id";
   public static final String FIELD_EPOCH = "subject_profile_epoch";
@@ -118,40 +119,40 @@ public class PostgresSubjectProfileService implements SubjectProfileService {
       (i, resultSet, statementContext) -> resultSet.getLong(1);
 
   public SubjectProfile createSubjectProfile(SubjectProfileCreate build) {
-    log.debug("Creating {}", build);
+    LOGGER.debug("Creating {}", build);
     final SubjectProfile created =
         dbi.inTransaction(
             (handle, transactionStatus) -> {
-              final String externalSubjectName = build.getExternalSubjectName();
-              final String externalSubjectReference = build.getExternalSubjectReference();
-              final Long customerProfileId = build.getCustomerProfileId();
+              final String externalSubjectName = build.externalSubjectName();
+              final String externalSubjectReference = build.externalSubjectReference();
+              final Long customerProfileId = build.customerProfileId();
               final Long subjectProfileId = insertNewSubjectProfileId(handle);
               final long epoch = System.currentTimeMillis();
+
               final SubjectProfile customerProfile =
-                  SubjectProfile.builder()
-                      .version(0)
-                      .id(subjectProfileId)
-                      .externalSubjectReference(externalSubjectReference)
-                      .externalSubjectName(externalSubjectName)
-                      .customerProfileId(customerProfileId)
-                      .epoch(epoch)
-                      .build();
+                  new SubjectProfile(
+                      subjectProfileId,
+                      0,
+                      epoch,
+                      customerProfileId,
+                      externalSubjectName,
+                      externalSubjectReference);
               insertNewSubjectProfile(handle, customerProfile);
               return customerProfile;
             });
-    log.debug("Created {}", created);
+    LOGGER.debug("Created {}", created);
     return created;
   }
 
   private void insertNewSubjectProfile(Handle handle, SubjectProfile subjectProfile) {
     handle
         .createStatement(INSERT_NEW_CUSTOMER_PROFILE)
-        .bind(FIELD_SUBJECT_NAME, subjectProfile.getExternalSubjectName())
-        .bind(FIELD_SUBJECT_REFERENCE, subjectProfile.getExternalSubjectReference())
-        .bind(FIELD_SUBJECT_CUSTOMER_PROFILE_ID, subjectProfile.getCustomerProfileId())
-        .bind(FIELD_ID, subjectProfile.getId())
-        .bind(FIELD_EPOCH, subjectProfile.getEpoch())
-        .bind(FIELD_VERSION, subjectProfile.getVersion())
+        .bind(FIELD_SUBJECT_NAME, subjectProfile.externalSubjectName())
+        .bind(FIELD_SUBJECT_REFERENCE, subjectProfile.externalSubjectReference())
+        .bind(FIELD_SUBJECT_CUSTOMER_PROFILE_ID, subjectProfile.customerProfileId())
+        .bind(FIELD_ID, subjectProfile.id())
+        .bind(FIELD_EPOCH, subjectProfile.epoch())
+        .bind(FIELD_VERSION, subjectProfile.version())
         .execute();
   }
 
@@ -163,8 +164,8 @@ public class PostgresSubjectProfileService implements SubjectProfileService {
   public SubjectProfile updateSubjectProfile(SubjectProfileUpdate update) {
     return dbi.inTransaction(
         (handle, transactionStatus) -> {
-          final Long id = update.getId();
-          final Long lastVersion = update.getLastVersion();
+          final Long id = update.id();
+          final Long lastVersion = update.lastVersion();
           final long nextVersion = lastVersion + 1L;
           final long epoch = System.currentTimeMillis();
           final boolean updateVersionSuccess =
@@ -185,15 +186,19 @@ public class PostgresSubjectProfileService implements SubjectProfileService {
                       .execute()
                   == 1;
           if (updateVersionSuccess) {
+
+            final Long customerProfileId = update.customerProfileId();
+            final String externalSubjectReference = update.externalSubjectReference();
+            final String externalSubjectName = update.externalSubjectName();
+
             final SubjectProfile customerProfile =
-                SubjectProfile.builder()
-                    .epoch(epoch)
-                    .externalSubjectName(update.getExternalSubjectName())
-                    .externalSubjectReference(update.getExternalSubjectReference())
-                    .customerProfileId(update.getCustomerProfileId())
-                    .id(update.getId())
-                    .version(nextVersion)
-                    .build();
+                new SubjectProfile(
+                    id,
+                    nextVersion,
+                    epoch,
+                    customerProfileId,
+                    externalSubjectName,
+                    externalSubjectReference);
             insertNewSubjectProfile(handle, customerProfile);
             return customerProfile;
           } else {
@@ -203,7 +208,7 @@ public class PostgresSubjectProfileService implements SubjectProfileService {
   }
 
   public SubjectProfile readSubjectProfile(long id) {
-    log.debug("Reading {}", id);
+    LOGGER.debug("Reading {}", id);
     return dbi.inTransaction(
         (handle, transactionStatus) -> {
           final long version = selectVersionForId(id, handle);
@@ -217,15 +222,19 @@ public class PostgresSubjectProfileService implements SubjectProfileService {
         .bind(FIELD_ID, id)
         .bind(FIELD_VERSION, version)
         .map(
-            (i, resultSet, statementContext) ->
-                SubjectProfile.builder()
-                    .externalSubjectName(resultSet.getString(FIELD_SUBJECT_NAME))
-                    .externalSubjectReference(resultSet.getString(FIELD_SUBJECT_REFERENCE))
-                    .customerProfileId(resultSet.getLong(FIELD_SUBJECT_CUSTOMER_PROFILE_ID))
-                    .id(id)
-                    .version(version)
-                    .epoch(resultSet.getLong(FIELD_EPOCH))
-                    .build())
+            (i, resultSet, statementContext) -> {
+              final String externalSubjectName = resultSet.getString(FIELD_SUBJECT_NAME);
+              final String externalSubjectReference = resultSet.getString(FIELD_SUBJECT_REFERENCE);
+              final long customerProfileId = resultSet.getLong(FIELD_SUBJECT_CUSTOMER_PROFILE_ID);
+              final long epoch = resultSet.getLong(FIELD_EPOCH);
+              return new SubjectProfile(
+                  id,
+                  version,
+                  epoch,
+                  customerProfileId,
+                  externalSubjectName,
+                  externalSubjectReference);
+            })
         .first();
   }
 
@@ -251,16 +260,22 @@ public class PostgresSubjectProfileService implements SubjectProfileService {
                     .createQuery(SELECT_BY_CUSTOMER_PROFILE_ID)
                     .bind(FIELD_SUBJECT_CUSTOMER_PROFILE_ID, customerProfileId)
                     .map(
-                        (i, resultSet, statementContext) ->
-                            SubjectProfile.builder()
-                                .id(resultSet.getLong(FIELD_ID))
-                                .version(resultSet.getLong(FIELD_VERSION))
-                                .customerProfileId(customerProfileId)
-                                .externalSubjectName(resultSet.getString(FIELD_SUBJECT_NAME))
-                                .epoch(resultSet.getLong(FIELD_EPOCH))
-                                .externalSubjectReference(
-                                    resultSet.getString(FIELD_SUBJECT_REFERENCE))
-                                .build())
+                        (i, resultSet, statementContext) -> {
+                          final long id = resultSet.getLong(FIELD_ID);
+                          final long version = resultSet.getLong(FIELD_VERSION);
+                          final String externalSubjectName =
+                              resultSet.getString(FIELD_SUBJECT_NAME);
+                          final long epoch = resultSet.getLong(FIELD_EPOCH);
+                          final String externalSubjectReference =
+                              resultSet.getString(FIELD_SUBJECT_REFERENCE);
+                          return new SubjectProfile(
+                              id,
+                              version,
+                              epoch,
+                              customerProfileId,
+                              externalSubjectName,
+                              externalSubjectReference);
+                        })
                     .list()));
   }
 }

@@ -1,5 +1,7 @@
 package pias.backend.id.server.servlets;
 
+import java.io.IOException;
+import javax.servlet.Servlet;
 import org.apache.avro.Protocol;
 import org.apache.avro.ipc.ResponderServlet;
 import org.apache.avro.ipc.specific.SpecificResponder;
@@ -14,9 +16,6 @@ import pias.backend.id.server.avro.PIAAvprImpl;
 import pias.backend.id.server.avro.SubjectProfileAvprImpl;
 import pias.backend.id.server.database.CustomerProfileService;
 import pias.backend.id.server.database.SubjectProfileService;
-
-import javax.servlet.Servlet;
-import java.io.IOException;
 
 public class AvroServlets {
   public ImmutableMap<String, Servlet> avroServlets(

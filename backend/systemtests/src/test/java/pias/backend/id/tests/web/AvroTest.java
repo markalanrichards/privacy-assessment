@@ -1,22 +1,21 @@
 package pias.backend.id.tests.web;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import org.apache.avro.Protocol;
 import org.apache.avro.ipc.HttpTransceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Maps;
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.hamcrest.core.IsEqual;
 import org.junit.*;
 import pias.backend.*;
 import pias.backend.avro.*;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import pias.backend.id.test.main.web.UrlHelper;
 
 public class AvroTest {
   @Rule public WebInstance webInstance = new WebInstance();
@@ -37,14 +36,19 @@ public class AvroTest {
   }
 
   private <T> T createClient(Protocol protocol, Class<T> iface) throws IOException {
-    final URI url =
-        webInstance.webClient().getUrlHelper().toBuilder()
-            .path(
-                Optional.of(
-                    String.format("/avpr/%s.%s", protocol.getNamespace(), protocol.getName())))
-            .build()
-            .getUrl();
-    httpTransceiver = new HttpTransceiver(url.toURL());
+
+    final UrlHelper baseHelper = webInstance.webClient().getUrlHelper();
+    final UrlHelper urlHelper =
+        new UrlHelper(
+            baseHelper.fragment(),
+            baseHelper.query(),
+            String.format("/avpr/%s.%s", protocol.getNamespace(), protocol.getName()),
+            baseHelper.port(),
+            baseHelper.host(),
+            baseHelper.scheme(),
+            baseHelper.userInfo());
+
+    httpTransceiver = new HttpTransceiver(urlHelper.getUrl().toURL());
     return SpecificRequestor.getClient(iface, httpTransceiver);
   }
 
@@ -61,7 +65,7 @@ public class AvroTest {
   public void testCustomerProfileClient() {
     final CustomerProfileAvro customerProfileAvro =
         createCustomerProfile("testEmail", "testExternalLegalName");
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         customerProfileAvro,
         IsEqual.equalTo(customerProfileAvpr.avroReadCustomerProfile(customerProfileAvro.getId())));
     final CustomerProfileAvro customerProfileAvro1 =
@@ -72,12 +76,12 @@ public class AvroTest {
                 .setExternalEmail("nextEmail")
                 .setExternalLegalName("nextExternalLegalName")
                 .build());
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         customerProfileAvro1,
         IsEqual.equalTo(customerProfileAvpr.avroReadCustomerProfile(customerProfileAvro.getId())));
     final CustomerProfileAvro customerProfileAvro2 =
         customerProfileAvpr.avroReadVersionedCustomerProfile("1", "1");
-    Assert.assertThat(customerProfileAvro1, IsEqual.equalTo(customerProfileAvro2));
+    MatcherAssert.assertThat(customerProfileAvro1, IsEqual.equalTo(customerProfileAvro2));
   }
 
   private CustomerProfileAvro createCustomerProfile(
@@ -94,7 +98,7 @@ public class AvroTest {
   public void testSubjectProfileClient() {
 
     final SubjectProfileAvro subjectProfileAvro = createSubjectProfile();
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         subjectProfileAvro,
         IsEqual.equalTo(subjectProfileAvpr.avroReadSubjectProfile(subjectProfileAvro.getId())));
     final SubjectProfileAvro subjectProfileAvro1 =
@@ -106,16 +110,16 @@ public class AvroTest {
                 .setCustomerProfileId(subjectProfileAvro.getCustomerProfileId())
                 .setExternalSubjectName("testSubjectName")
                 .build());
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         subjectProfileAvro1,
         IsEqual.equalTo(subjectProfileAvpr.avroReadSubjectProfile(subjectProfileAvro.getId())));
     final SubjectProfileAvro subjectProfileAvro2 =
         subjectProfileAvpr.avroReadVersionedSubjectProfile("1", "1");
-    Assert.assertThat(subjectProfileAvro1, IsEqual.equalTo(subjectProfileAvro2));
+    MatcherAssert.assertThat(subjectProfileAvro1, IsEqual.equalTo(subjectProfileAvro2));
     List<SubjectProfileAvro> subjectProfileAvros =
         subjectProfileAvpr.avroReadSubjectProfilesForCustomerProfile(
             subjectProfileAvro.getCustomerProfileId());
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         Lists.immutable.ofAll(subjectProfileAvros),
         IsEqual.equalTo(Lists.immutable.of(subjectProfileAvro2)));
   }
@@ -246,7 +250,7 @@ public class AvroTest {
     final PIACreateAvro piaCreateAvro = createPIA();
     PIADocumentAvro document = piaCreateAvro.getDocument();
     final PIAAvro piaAvro = piaAvpr.avroCreatePIA(piaCreateAvro);
-    Assert.assertThat(piaAvro, IsEqual.equalTo(piaAvpr.avroReadPIA(piaAvro.getId())));
+    MatcherAssert.assertThat(piaAvro, IsEqual.equalTo(piaAvpr.avroReadPIA(piaAvro.getId())));
     final PIAAvro updatePiaAvro =
         piaAvpr.avroUpdatePIA(
             PIAUpdateAvro.newBuilder()
@@ -267,9 +271,10 @@ public class AvroTest {
                                 .build())
                         .build())
                 .build());
-    Assert.assertThat(updatePiaAvro, IsEqual.equalTo(piaAvpr.avroReadPIA(piaAvro.getId())));
-    Assert.assertThat(updatePiaAvro, IsEqual.equalTo(piaAvpr.avroReadVersionedPIA("1", "1")));
-    Assert.assertThat(updatePiaAvro, Matchers.not(IsEqual.equalTo(piaAvro)));
+    MatcherAssert.assertThat(updatePiaAvro, IsEqual.equalTo(piaAvpr.avroReadPIA(piaAvro.getId())));
+    MatcherAssert.assertThat(
+        updatePiaAvro, IsEqual.equalTo(piaAvpr.avroReadVersionedPIA("1", "1")));
+    MatcherAssert.assertThat(updatePiaAvro, Matchers.not(IsEqual.equalTo(piaAvro)));
   }
 
   @Test
@@ -284,7 +289,7 @@ public class AvroTest {
             .setDocument(createTestDocument())
             .build();
     PIAAvro firstRest = privacyImpactAssessmentAnnexOneAvpr.avroCreatePIA(create);
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         firstRest,
         IsEqual.equalTo(privacyImpactAssessmentAnnexOneAvpr.avroReadPIA(firstRest.getId())));
     final PIADocumentAvro testDocument = createTestDocument();
@@ -302,11 +307,11 @@ public class AvroTest {
             .setSubjectProfileId(String.valueOf(firstRest.getSubjectProfileId()))
             .build();
     final PIAAvro updated = privacyImpactAssessmentAnnexOneAvpr.avroUpdatePIA(build);
-    Assert.assertThat(
+    MatcherAssert.assertThat(
         updated,
         IsEqual.equalTo(privacyImpactAssessmentAnnexOneAvpr.avroReadPIA(firstRest.getId())));
     final PIAAvro privacyImpactAssessmentAnnexOneAvro =
         privacyImpactAssessmentAnnexOneAvpr.avroReadVersionedPIA("1", "1");
-    Assert.assertThat(updated, IsEqual.equalTo(privacyImpactAssessmentAnnexOneAvro));
+    MatcherAssert.assertThat(updated, IsEqual.equalTo(privacyImpactAssessmentAnnexOneAvro));
   }
 }

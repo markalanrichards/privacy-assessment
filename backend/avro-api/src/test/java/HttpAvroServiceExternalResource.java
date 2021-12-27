@@ -1,3 +1,5 @@
+import java.net.URL;
+import java.util.UUID;
 import org.apache.avro.ipc.HttpTransceiver;
 import org.apache.avro.ipc.ResponderServlet;
 import org.apache.avro.ipc.specific.SpecificRequestor;
@@ -12,9 +14,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.rules.ExternalResource;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
-
-import java.net.URL;
-import java.util.UUID;
 
 public class HttpAvroServiceExternalResource<T> extends ExternalResource {
   public static Utf8 RANDOM_UTF8() {

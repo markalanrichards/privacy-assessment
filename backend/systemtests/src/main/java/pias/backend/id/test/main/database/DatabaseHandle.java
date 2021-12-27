@@ -1,17 +1,14 @@
 package pias.backend.id.test.main.database;
 
-import lombok.extern.log4j.Log4j2;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import org.testcontainers.containers.MySQLContainer;
 import pias.backend.flyway.FlywayConfig;
 import pias.backend.flyway.FlywayJdbcConfig;
 import pias.backend.flyway.mysql.MysqlFlywayManaged;
 import pias.backend.flyway.mysql.MysqlMigrator;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-
-@Log4j2
 public class DatabaseHandle implements AutoCloseable {
 
   private final MySQLContainer mySQLContainer;
@@ -33,14 +30,9 @@ public class DatabaseHandle implements AutoCloseable {
       final String username = mySQLContainer.getUsername();
       final String password = mySQLContainer.getPassword();
       this.serverConnection = DriverManager.getConnection(jdbcUrl, username, password);
-      flywayJdbcConfig =
-          FlywayJdbcConfig.builder().jdbcUrl(jdbcUrl).user(username).password(password).build();
-      flywayManaged =
-          new MysqlFlywayManaged(
-              FlywayConfig.builder()
-                  .classForPackage(MysqlMigrator.class)
-                  .flywayJdbcConfig(flywayJdbcConfig)
-                  .build());
+      flywayJdbcConfig = new FlywayJdbcConfig(jdbcUrl, username, password, "", 30L);
+      final FlywayConfig flywayConfig = new FlywayConfig(flywayJdbcConfig, MysqlMigrator.class);
+      flywayManaged = new MysqlFlywayManaged(flywayConfig);
       flywayManaged.migrate();
 
     } catch (SQLException e) {

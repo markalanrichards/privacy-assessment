@@ -13,6 +13,6 @@ public class FlywayConfigMapper {
     String jdbcUrl = jsonNode.get(JDBC_URL).asText();
     String password = jsonNode.get(JDBC_PASSWORD).asText();
     String user = jsonNode.get(JDBC_USER).asText();
-    return FlywayJdbcConfig.builder().jdbcUrl(jdbcUrl).password(password).user(user).build();
+    return new FlywayJdbcConfig(jdbcUrl, user, password, "", 30L);
   }
 }

@@ -6,11 +6,8 @@ public record CustomerProfileUpdateJaxRs(
     String externalEmail, String externalLegalEntity, String lastVersion, String id) {
 
   public CustomerProfileUpdate fromJaxRs() {
-    return CustomerProfileUpdate.builder()
-        .externalLegalEntity(externalLegalEntity)
-        .externalEmail(externalEmail)
-        .lastVersion(Long.valueOf(lastVersion))
-        .id(Long.valueOf(id))
-        .build();
+    final Long id = Long.valueOf(this.id);
+    final Long lastVersion = Long.valueOf(this.lastVersion);
+    return new CustomerProfileUpdate(id, lastVersion, externalEmail, externalLegalEntity);
   }
 }

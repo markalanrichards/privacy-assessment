@@ -1,15 +1,14 @@
 package pias.backend.flyway.postgres;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.time.Duration;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import pias.backend.flyway.FlywayConfig;
 import pias.backend.flyway.FlywayJdbcConfig;
 import pias.backend.flyway.FlywayManaged;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.time.Duration;
 
 public class PostgresFlywayManaged implements FlywayManaged {
 
@@ -20,16 +19,16 @@ public class PostgresFlywayManaged implements FlywayManaged {
   private final Duration limit;
 
   public PostgresFlywayManaged(final FlywayConfig flywayConfig) {
-    final FlywayJdbcConfig flywayJdbcConfig = flywayConfig.getFlywayJdbcConfig();
-    jdbcUrl = flywayJdbcConfig.getJdbcUrl();
-    user = flywayJdbcConfig.getUser();
-    password = flywayJdbcConfig.getPassword();
-    limit = Duration.ofSeconds(flywayJdbcConfig.getTimeoutSeconds());
+    final FlywayJdbcConfig flywayJdbcConfig = flywayConfig.flywayJdbcConfig();
+    jdbcUrl = flywayJdbcConfig.jdbcUrl();
+    user = flywayJdbcConfig.user();
+    password = flywayJdbcConfig.password();
+    limit = Duration.ofSeconds(flywayJdbcConfig.timeoutSeconds());
     final FluentConfiguration config =
         new FluentConfiguration()
             .dataSource(jdbcUrl, user, password)
-            .initSql(flywayJdbcConfig.getInitSql())
-            .locations(flywayConfig.getClassForPackage().getPackage().getName().replace('.', '/'));
+            .initSql(flywayJdbcConfig.initSql())
+            .locations(flywayConfig.classForPackage().getPackage().getName().replace('.', '/'));
     flyway = new Flyway(config);
   }
 

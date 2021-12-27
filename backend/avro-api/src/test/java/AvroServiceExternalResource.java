@@ -1,3 +1,7 @@
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.util.Random;
+import java.util.UUID;
 import org.apache.avro.ipc.Server;
 import org.apache.avro.ipc.netty.NettyServer;
 import org.apache.avro.ipc.netty.NettyTransceiver;
@@ -6,11 +10,6 @@ import org.apache.avro.ipc.specific.SpecificResponder;
 import org.junit.rules.ExternalResource;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
-
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.util.Random;
-import java.util.UUID;
 
 public class AvroServiceExternalResource<T> extends ExternalResource {
   public static String RANDOM_UTF8() {
