@@ -1,7 +1,7 @@
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
 import pias.backend.*;
 
@@ -130,7 +130,7 @@ public class PIATest {
         .build();
   }
 
-  @Rule
+  @RegisterExtension
   public AvroServiceExternalResource<PIAAvpr>
       privacyImpactAssessmentAnnexOneServiceAvroServiceExternalResource =
           new AvroServiceExternalResource<>(PIAAvpr.class);

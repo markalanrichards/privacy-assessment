@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import pias.backend.id.server.entity.JdbcConfiguration;
 import pias.backend.id.server.entity.JdbcConfigurationTest;
 
@@ -13,7 +13,7 @@ public class JdbcConfigurationMapperTest {
 
   private JdbcConfigurationMapper jdbcConfigurationMapper;
 
-  @Before
+  @BeforeEach
   public void setup() {
     this.jdbcConfigurationMapper = new JdbcConfigurationMapper(new ObjectMapper());
   }

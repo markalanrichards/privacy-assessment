@@ -2,9 +2,9 @@ package pias.backend.flyway.mysqltest;
 
 import java.sql.SQLException;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.Query;
 import org.skife.jdbi.v2.Update;
@@ -13,7 +13,7 @@ import pias.backend.flyway.mysql.MysqlFlywayManagedDatabase;
 
 public class MysqlFlywayManagedTest {
 
-  @Rule
+  @RegisterExtension
   public MysqlFlywayManagedDatabase flywayManagedDatabase =
       new MysqlFlywayManagedDatabase(MysqlFlywayManagedTest.class);
 
@@ -33,6 +33,6 @@ public class MysqlFlywayManagedTest {
               final Query<Long> map = query.map(LongColumnMapper.PRIMITIVE);
               return map.list().get(0);
             });
-    Assert.assertEquals(aLong.longValue(), 1L);
+    Assertions.assertEquals(aLong.longValue(), 1L);
   }
 }

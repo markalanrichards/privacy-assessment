@@ -1,7 +1,7 @@
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
 import pias.backend.avro.SubjectProfileAvpr;
 import pias.backend.avro.SubjectProfileAvro;
@@ -38,7 +38,7 @@ public class SubjectProfileTest {
         .build();
   }
 
-  @Rule
+  @RegisterExtension
   public AvroServiceExternalResource<SubjectProfileAvpr>
       productProfileServiceAvroServiceExternalResource =
           new AvroServiceExternalResource<>(SubjectProfileAvpr.class);

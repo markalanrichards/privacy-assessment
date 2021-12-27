@@ -7,11 +7,13 @@ import org.apache.avro.ipc.netty.NettyServer;
 import org.apache.avro.ipc.netty.NettyTransceiver;
 import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.apache.avro.ipc.specific.SpecificResponder;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 
-public class AvroServiceExternalResource<T> extends ExternalResource {
+public class AvroServiceExternalResource<T> implements BeforeEachCallback, AfterEachCallback {
   public static String RANDOM_UTF8() {
     return UUID.randomUUID().toString();
   }
@@ -39,7 +41,7 @@ public class AvroServiceExternalResource<T> extends ExternalResource {
   }
 
   @Override
-  public void before() throws IOException, InterruptedException {
+  public void beforeEach(ExtensionContext context) throws IOException, InterruptedException {
     service = Mockito.mock(clazz);
     server = new NettyServer(new SpecificResponder(clazz, service), new InetSocketAddress(0));
 
@@ -50,7 +52,7 @@ public class AvroServiceExternalResource<T> extends ExternalResource {
   }
 
   @Override
-  public void after() {
+  public void afterEach(ExtensionContext context) {
     nettyTransceiver.close();
     server.close();
   }

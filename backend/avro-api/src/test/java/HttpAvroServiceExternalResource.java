@@ -11,11 +11,13 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 
-public class HttpAvroServiceExternalResource<T> extends ExternalResource {
+public class HttpAvroServiceExternalResource<T> implements BeforeEachCallback, AfterEachCallback {
   public static Utf8 RANDOM_UTF8() {
     return new Utf8(new Utf8(UUID.randomUUID().toString()));
   }
@@ -40,7 +42,7 @@ public class HttpAvroServiceExternalResource<T> extends ExternalResource {
   }
 
   @Override
-  public void before() throws Exception {
+  public void beforeEach(ExtensionContext context) throws Exception {
 
     service = Mockito.mock(clazz);
     SpecificResponder responder = new SpecificResponder(clazz, service);
@@ -63,7 +65,7 @@ public class HttpAvroServiceExternalResource<T> extends ExternalResource {
   }
 
   @Override
-  public void after() {
+  public void afterEach(ExtensionContext context) {
     try {
       nettyTransceiver.close();
       server.stop();

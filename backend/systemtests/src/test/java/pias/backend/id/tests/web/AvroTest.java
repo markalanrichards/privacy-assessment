@@ -9,16 +9,19 @@ import org.apache.avro.ipc.specific.SpecificRequestor;
 import org.eclipse.collections.api.map.ImmutableMap;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Maps;
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.hamcrest.core.IsEqual;
-import org.junit.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import pias.backend.*;
 import pias.backend.avro.*;
 import pias.backend.id.test.main.web.UrlHelper;
 
 public class AvroTest {
-  @Rule public WebInstance webInstance = new WebInstance();
+  @RegisterExtension public WebInstance webInstance = new WebInstance();
 
   private CustomerProfileAvpr customerProfileAvpr;
   private SubjectProfileAvpr subjectProfileAvpr;
@@ -26,7 +29,7 @@ public class AvroTest {
   private PIAAvpr piaAvpr;
   private HttpTransceiver httpTransceiver;
 
-  @Before
+  @BeforeEach
   public void setup() throws IOException {
     this.customerProfileAvpr =
         createClient(CustomerProfileAvpr.PROTOCOL, CustomerProfileAvpr.class);
@@ -52,7 +55,7 @@ public class AvroTest {
     return SpecificRequestor.getClient(iface, httpTransceiver);
   }
 
-  @After
+  @AfterEach
   public void shutdown() {
     try {
       this.httpTransceiver.close();
@@ -274,7 +277,7 @@ public class AvroTest {
     MatcherAssert.assertThat(updatePiaAvro, IsEqual.equalTo(piaAvpr.avroReadPIA(piaAvro.getId())));
     MatcherAssert.assertThat(
         updatePiaAvro, IsEqual.equalTo(piaAvpr.avroReadVersionedPIA("1", "1")));
-    MatcherAssert.assertThat(updatePiaAvro, Matchers.not(IsEqual.equalTo(piaAvro)));
+    MatcherAssert.assertThat(updatePiaAvro, CoreMatchers.not(IsEqual.equalTo(piaAvro)));
   }
 
   @Test

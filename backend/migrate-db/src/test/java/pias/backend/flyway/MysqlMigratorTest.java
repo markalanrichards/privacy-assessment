@@ -2,10 +2,10 @@ package pias.backend.flyway;
 
 import java.sql.*;
 import java.util.stream.Stream;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
 import pias.backend.flyway.model.MigrationConfig;
 import pias.backend.flyway.mysql.MysqlMigrator;
@@ -17,7 +17,7 @@ public class MysqlMigratorTest {
   MysqlMigrator migration;
   private MigrationConfig migrationConfig;
 
-  @Before
+  @BeforeEach
   public void setup() {
     mySQLContainer = new MySQLContainer("mysql:8");
     mySQLContainer.start();
@@ -32,7 +32,7 @@ public class MysqlMigratorTest {
     this.migrationConfig = migrationConfig;
   }
 
-  @After
+  @AfterEach
   public void tesrdown() {
     this.mySQLContainer.stop();
     this.mySQLContainer.close();
@@ -68,7 +68,7 @@ public class MysqlMigratorTest {
                     contextConnection.prepareStatement(String.format("SELECT * FROM %s", table))) {
                   try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     boolean next = resultSet.next();
-                    Assert.assertFalse(next);
+                    Assertions.assertFalse(next);
                   }
                 } catch (SQLException e) {
                   throw new RuntimeException(e);

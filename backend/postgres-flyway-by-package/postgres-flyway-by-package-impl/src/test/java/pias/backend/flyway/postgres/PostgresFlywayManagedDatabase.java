@@ -4,13 +4,15 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Random;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.skife.jdbi.v2.DBI;
 import org.testcontainers.containers.PostgreSQLContainer;
 import pias.backend.flyway.FlywayConfig;
 import pias.backend.flyway.FlywayJdbcConfig;
 
-public class PostgresFlywayManagedDatabase extends ExternalResource {
+public class PostgresFlywayManagedDatabase implements BeforeEachCallback, AfterEachCallback {
   private PostgreSQLContainer postgreSQLContainer;
   //    @Override
   //    public Statement apply(Statement var1, Description var2){
@@ -31,7 +33,8 @@ public class PostgresFlywayManagedDatabase extends ExternalResource {
     this.classForPackage = classForPackage;
   }
 
-  protected void before() throws Throwable {
+  @Override
+  public void beforeEach(ExtensionContext context) throws SQLException {
     postgreSQLContainer = new PostgreSQLContainer("postgres:11");
 
     postgreSQLContainer.withDatabaseName("a" + Math.abs(new Random().nextLong()));
@@ -55,8 +58,9 @@ public class PostgresFlywayManagedDatabase extends ExternalResource {
     flywayManaged.migrate();
   }
 
+  @Override
   /** Override to tear down your specific external resource. */
-  protected void after() {
+  public void afterEach(ExtensionContext context) {
     flywayManaged.clean();
 
     try {

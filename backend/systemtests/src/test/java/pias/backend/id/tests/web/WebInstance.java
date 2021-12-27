@@ -2,7 +2,9 @@ package pias.backend.id.tests.web;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.rules.ExternalResource;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import pias.backend.flyway.FlywayJdbcConfig;
 import pias.backend.id.server.PrivacyServer;
 import pias.backend.id.server.entity.JdbcConfiguration;
@@ -10,7 +12,7 @@ import pias.backend.id.server.entity.PrivacyConfiguration;
 import pias.backend.id.test.main.database.DatabaseHandle;
 import pias.backend.id.test.main.web.model.WebClient;
 
-public class WebInstance extends ExternalResource {
+public class WebInstance implements BeforeEachCallback, AfterEachCallback {
 
   private static final Logger LOGGER = LogManager.getLogger(WebInstance.class);
   private DatabaseHandle databaseHandle;
@@ -19,7 +21,7 @@ public class WebInstance extends ExternalResource {
   private WebClient instance;
 
   @Override
-  public void before() throws Throwable {
+  public void beforeEach(ExtensionContext context) {
 
     databaseHandle = new DatabaseHandle();
 
@@ -43,7 +45,7 @@ public class WebInstance extends ExternalResource {
   }
 
   @Override
-  public void after() {
+  public void afterEach(ExtensionContext context) {
     try {
       databaseHandle.close();
     } finally {

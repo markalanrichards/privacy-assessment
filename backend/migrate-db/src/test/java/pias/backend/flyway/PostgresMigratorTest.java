@@ -2,10 +2,10 @@ package pias.backend.flyway;
 
 import java.sql.*;
 import java.util.stream.Stream;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.PostgreSQLContainer;
 import pias.backend.flyway.model.MigrationConfig;
 import pias.backend.flyway.postgres.PostgresMigrator;
@@ -17,7 +17,7 @@ public class PostgresMigratorTest {
   PostgresMigrator migration;
   private MigrationConfig migrationConfig;
 
-  @Before
+  @BeforeEach
   public void setup() {
     postgreSQLContainer = new PostgreSQLContainer("postgres:11");
     postgreSQLContainer.start();
@@ -32,7 +32,7 @@ public class PostgresMigratorTest {
     this.migrationConfig = migrationConfig;
   }
 
-  @After
+  @AfterEach
   public void tesrdown() {
     this.postgreSQLContainer.stop();
     this.postgreSQLContainer.close();
@@ -65,7 +65,7 @@ public class PostgresMigratorTest {
                     contextConnection.prepareStatement(String.format("SELECT * FROM %s", table))) {
                   try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     boolean next = resultSet.next();
-                    Assert.assertFalse(next);
+                    Assertions.assertFalse(next);
                   }
                 } catch (SQLException e) {
                   throw new RuntimeException(e);

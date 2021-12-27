@@ -4,16 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pias.backend.id.server.mapping.json.JdbcConfigurationMapper;
 import pias.backend.id.server.mapping.json.PrivacyConfigurationMapper;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class PrivacyConfigurationTest {
   public static final String SAMPLE_HOSTNAME = "SAMPLE_HOSTNAME";
   public static final String SAMPLE_DATABASE = "SAMPLE_DATABASE";
@@ -31,7 +31,7 @@ public class PrivacyConfigurationTest {
 
   @Mock private ObjectNode objectNode;
 
-  @Before
+  @BeforeEach
   public void setup() {
     this.privacyConfigurationMapper =
         new PrivacyConfigurationMapper(new ObjectMapper(), jdbcConfigurationMapper);

@@ -13,9 +13,9 @@ import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.DefaultAsyncHttpClient;
 import org.asynchttpclient.Response;
 import org.eclipse.collections.impl.factory.Lists;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MySQLContainer;
 import pias.backend.flyway.FlywayConfig;
 import pias.backend.flyway.FlywayJdbcConfig;
@@ -39,7 +39,7 @@ public class MysqlPrivacyServerTest {
   SubjectProfileServiceInterfaceJaxRs subjectProfileServiceInterfaceJaxRs;
   PIAServiceInterfaceJaxRs piaInterfaceJaxRs;
 
-  @Before
+  @BeforeEach
   public void setup() throws Exception {
     mySQLContainer = new MySQLContainer("mysql:8");
     mySQLContainer.start();
@@ -76,7 +76,7 @@ public class MysqlPrivacyServerTest {
             Lists.immutable.of(jacksonJsonProvider).castToList());
   }
 
-  @After
+  @AfterEach
   public void stop() throws Exception {
     privacyServer.close();
     flywayManaged.clean();

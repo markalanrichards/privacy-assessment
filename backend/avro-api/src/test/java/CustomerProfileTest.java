@@ -1,16 +1,16 @@
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import pias.backend.avro.CustomerProfileAvpr;
 import pias.backend.avro.CustomerProfileAvro;
 import pias.backend.avro.CustomerProfileCreateAvro;
 import pias.backend.avro.CustomerProfileUpdateAvro;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CustomerProfileTest {
   public static CustomerProfileAvro RANDOM_CUSTOMER_PROFILE() {
     return CustomerProfileAvro.newBuilder()
@@ -38,7 +38,7 @@ public class CustomerProfileTest {
         .build();
   }
 
-  @Rule
+  @RegisterExtension
   public HttpAvroServiceExternalResource<CustomerProfileAvpr>
       customerProfileServiceAvroServiceExternalResource =
           new HttpAvroServiceExternalResource<>(CustomerProfileAvpr.class);
