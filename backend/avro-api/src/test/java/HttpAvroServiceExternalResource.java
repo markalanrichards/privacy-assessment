@@ -32,7 +32,7 @@ public class HttpAvroServiceExternalResource<T> implements BeforeEachCallback, A
   }
 
   private Server server;
-  private HttpTransceiver nettyTransceiver;
+  private HttpTransceiver httpTransceiver;
   private T service;
   private final Class<T> clazz;
   private T client;
@@ -59,15 +59,15 @@ public class HttpAvroServiceExternalResource<T> implements BeforeEachCallback, A
 
     server.start();
 
-    nettyTransceiver =
+    httpTransceiver =
         new HttpTransceiver(new URL("http://127.0.0.1:" + http.getLocalPort() + "/test"));
-    client = SpecificRequestor.getClient(clazz, nettyTransceiver);
+    client = SpecificRequestor.getClient(clazz, httpTransceiver);
   }
 
   @Override
   public void afterEach(ExtensionContext context) {
     try {
-      nettyTransceiver.close();
+      httpTransceiver.close();
       server.stop();
     } catch (Exception e) {
       throw new RuntimeException(e);

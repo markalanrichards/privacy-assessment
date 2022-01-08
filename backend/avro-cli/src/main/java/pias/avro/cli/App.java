@@ -83,13 +83,13 @@ public class App {
 
   private static <T> T getAvprClient(Class<T> iface, Protocol protocol) {
     try {
-      HttpTransceiver nettyTransceiver =
+      HttpTransceiver httpTransceiver =
           new HttpTransceiver(
               new URL(
                   String.format(
                       "http://127.0.0.1:8000/avpr/%s.%s",
                       protocol.getNamespace(), protocol.getName())));
-      return SpecificRequestor.getClient(iface, nettyTransceiver);
+      return SpecificRequestor.getClient(iface, httpTransceiver);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

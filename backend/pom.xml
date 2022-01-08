@@ -248,11 +248,6 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.apache.avro</groupId>
-                <artifactId>avro-ipc-netty</artifactId>
-                <version>${avro.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>pias.backend</groupId>
                 <artifactId>mysql-flyway-by-package-impl</artifactId>
                 <type>test-jar</type>
