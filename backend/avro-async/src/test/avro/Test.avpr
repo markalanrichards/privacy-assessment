@@ -1,0 +1,99 @@
+{
+  "namespace": "pias.backend.avro",
+  "protocol": "TestAvpr",
+  "types": [
+    {
+      "name": "TestAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        },
+        {
+          "name": "epoch",
+          "type": "string"
+        },
+        {
+          "name": "testField",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "TestCreateAvro",
+      "type": "record",
+      "fields": [
+      {
+               "name": "testField",
+               "type": "string"
+             }
+
+      ]
+    },
+    {
+      "name": "TestUpdateAvro",
+      "type": "record",
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "lastVersion",
+          "type": "string"
+        },
+       {
+                "name": "testField",
+                "type": "string"
+              }
+      ]
+    }
+  ],
+  "messages": {
+    "avroCreateTest": {
+      "request": [
+        {
+          "name": "request",
+          "type": "TestCreateAvro"
+        }
+      ],
+      "response": "TestAvro"
+    },
+    "avroUpdateTest": {
+      "request": [
+        {
+          "name": "update",
+          "type": "TestUpdateAvro"
+        }
+      ],
+      "response": "TestAvro"
+    },
+    "avroReadTest": {
+      "request": [
+        {
+          "name": "id",
+          "type": "string"
+        }
+      ],
+      "response": "TestAvro"
+    },
+    "avroReadVersionedTest": {
+      "request": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "type": "string"
+        }
+      ],
+      "response": "TestAvro"
+    }
+  }
+}

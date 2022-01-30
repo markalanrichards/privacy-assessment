@@ -1,9 +1,16 @@
+package pias.backend;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
+
+import java.io.IOException;
+import org.apache.avro.ipc.Callback;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pias.backend.avro.CustomerProfileAvpr;
 import pias.backend.avro.CustomerProfileAvro;
@@ -14,42 +21,48 @@ import pias.backend.avro.CustomerProfileUpdateAvro;
 public class CustomerProfileTest {
   public static CustomerProfileAvro RANDOM_CUSTOMER_PROFILE() {
     return CustomerProfileAvro.newBuilder()
-        .setId(AvroServiceExternalResource.RANDOM_UTF8())
-        .setVersion(AvroServiceExternalResource.RANDOM_UTF8())
-        .setEpoch(AvroServiceExternalResource.RANDOM_UTF8())
-        .setExternalEmail(AvroServiceExternalResource.RANDOM_UTF8())
-        .setExternalLegalName(AvroServiceExternalResource.RANDOM_UTF8())
+        .setId(AsyncAvroServiceExternalResource.RANDOM_UTF8())
+        .setVersion(AsyncAvroServiceExternalResource.RANDOM_UTF8())
+        .setEpoch(AsyncAvroServiceExternalResource.RANDOM_UTF8())
+        .setExternalEmail(AsyncAvroServiceExternalResource.RANDOM_UTF8())
+        .setExternalLegalName(AsyncAvroServiceExternalResource.RANDOM_UTF8())
         .build();
   }
 
   public static CustomerProfileCreateAvro RANDOM_CUSTOMER_PROFILE_REQUEST() {
     return CustomerProfileCreateAvro.newBuilder()
-        .setExternalEmail(AvroServiceExternalResource.RANDOM_UTF8())
-        .setExternalLegalName(AvroServiceExternalResource.RANDOM_UTF8())
+        .setExternalEmail(AsyncAvroServiceExternalResource.RANDOM_UTF8())
+        .setExternalLegalName(AsyncAvroServiceExternalResource.RANDOM_UTF8())
         .build();
   }
 
   public static CustomerProfileUpdateAvro RANDOM_CUSTOMER_PROFILE_UPDATE() {
     return CustomerProfileUpdateAvro.newBuilder()
-        .setId(AvroServiceExternalResource.RANDOM_UTF8())
-        .setLastVersion(AvroServiceExternalResource.RANDOM_UTF8())
-        .setExternalEmail(AvroServiceExternalResource.RANDOM_UTF8())
-        .setExternalLegalName(AvroServiceExternalResource.RANDOM_UTF8())
+        .setId(AsyncAvroServiceExternalResource.RANDOM_UTF8())
+        .setLastVersion(AsyncAvroServiceExternalResource.RANDOM_UTF8())
+        .setExternalEmail(AsyncAvroServiceExternalResource.RANDOM_UTF8())
+        .setExternalLegalName(AsyncAvroServiceExternalResource.RANDOM_UTF8())
         .build();
   }
 
   @RegisterExtension
-  public HttpAvroServiceExternalResource<CustomerProfileAvpr>
+  public AsyncAvroServiceExternalResource<CustomerProfileAvpr.Callback>
       customerProfileServiceAvroServiceExternalResource =
-          new HttpAvroServiceExternalResource<>(CustomerProfileAvpr.class);
+          new AsyncAvroServiceExternalResource<>(CustomerProfileAvpr.Callback.class);
 
   @Test
-  public void testCreate() {
+  public void testCreate() throws IOException {
     CustomerProfileCreateAvro customerProfileRequest = RANDOM_CUSTOMER_PROFILE_REQUEST();
     CustomerProfileAvro expectedCustomerProfile = RANDOM_CUSTOMER_PROFILE();
-    Mockito.doReturn(expectedCustomerProfile)
+    doAnswer(
+            invocation -> {
+              invocation
+                  .<Callback<CustomerProfileAvro>>getArgument(1)
+                  .handleResult(expectedCustomerProfile);
+              return null;
+            })
         .when(customerProfileServiceAvroServiceExternalResource.getService())
-        .avroCreateCustomerProfile(customerProfileRequest);
+        .avroCreateCustomerProfile(eq(customerProfileRequest), any(Callback.class));
     CustomerProfileAvro actualCustomerProfile =
         customerProfileServiceAvroServiceExternalResource
             .getClient()
@@ -58,12 +71,18 @@ public class CustomerProfileTest {
   }
 
   @Test
-  public void testUpdate() {
+  public void testUpdate() throws IOException {
     CustomerProfileUpdateAvro customerProfileUpdate = RANDOM_CUSTOMER_PROFILE_UPDATE();
     CustomerProfileAvro expectedUpdate = RANDOM_CUSTOMER_PROFILE();
-    Mockito.doReturn(expectedUpdate)
+
+    doAnswer(
+            invocation -> {
+              invocation.<Callback<CustomerProfileAvro>>getArgument(1).handleResult(expectedUpdate);
+              return null;
+            })
         .when(customerProfileServiceAvroServiceExternalResource.getService())
-        .avroUpdateCustomerProfile(customerProfileUpdate);
+        .avroUpdateCustomerProfile(eq(customerProfileUpdate), any(Callback.class));
+    ;
     CustomerProfileAvro actualCustomerProfile =
         customerProfileServiceAvroServiceExternalResource
             .getClient()
@@ -72,13 +91,16 @@ public class CustomerProfileTest {
   }
 
   @Test
-  public void testRead() {
-
+  public void testRead() throws IOException {
     CustomerProfileAvro expectedUpdate = RANDOM_CUSTOMER_PROFILE();
     final String id = expectedUpdate.getId();
-    CustomerProfileAvpr mockService =
-        customerProfileServiceAvroServiceExternalResource.getService();
-    Mockito.doReturn(expectedUpdate).when(mockService).avroReadCustomerProfile(id);
+    doAnswer(
+            invocation -> {
+              invocation.<Callback<CustomerProfileAvro>>getArgument(1).handleResult(expectedUpdate);
+              return null;
+            })
+        .when(customerProfileServiceAvroServiceExternalResource.getService())
+        .avroReadCustomerProfile(eq(id), any(Callback.class));
     CustomerProfileAvro actualCustomerProfile =
         customerProfileServiceAvroServiceExternalResource.getClient().avroReadCustomerProfile(id);
     MatcherAssert.assertThat(actualCustomerProfile, CoreMatchers.equalTo(expectedUpdate));

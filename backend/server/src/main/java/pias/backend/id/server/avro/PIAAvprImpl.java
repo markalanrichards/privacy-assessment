@@ -2,6 +2,7 @@ package pias.backend.id.server.avro;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.concurrent.CompletableFuture;
 import org.apache.avro.io.BinaryEncoder;
 import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.EncoderFactory;
@@ -15,7 +16,7 @@ import pias.backend.id.server.entity.PIA;
 import pias.backend.id.server.entity.PIACreate;
 import pias.backend.id.server.entity.PIAUpdate;
 
-public class PIAAvprImpl implements PIAAvpr {
+public class PIAAvprImpl implements PIAAvpr.Callback {
   private final PIAService mysqlPiaService;
   private DecoderFactory decoderFactory = DecoderFactory.get();
   final SpecificDatumReader<PIADocumentAvro> sdr = new SpecificDatumReader<>(PIADocumentAvro.class);
@@ -94,5 +95,62 @@ public class PIAAvprImpl implements PIAAvpr {
   public PIAAvro avroReadVersionedPIA(String id, String version) {
     final PIA read = mysqlPiaService.read(Long.valueOf(id), Long.valueOf(version));
     return convertToPIAAvro(read);
+  }
+
+  @Override
+  public void avroCreatePIA(PIACreateAvro request, org.apache.avro.ipc.Callback<PIAAvro> callback)
+      throws IOException {
+    CompletableFuture.supplyAsync(() -> avroCreatePIA(request))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
+  }
+
+  @Override
+  public void avroUpdatePIA(PIAUpdateAvro update, org.apache.avro.ipc.Callback<PIAAvro> callback)
+      throws IOException {
+    CompletableFuture.supplyAsync(() -> avroUpdatePIA(update))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
+  }
+
+  @Override
+  public void avroReadPIA(String id, org.apache.avro.ipc.Callback<PIAAvro> callback)
+      throws IOException {
+    CompletableFuture.supplyAsync(() -> avroReadPIA(id))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
+  }
+
+  @Override
+  public void avroReadVersionedPIA(
+      String id, String version, org.apache.avro.ipc.Callback<PIAAvro> callback)
+      throws IOException {
+    CompletableFuture.supplyAsync(() -> avroReadVersionedPIA(id, version))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
   }
 }

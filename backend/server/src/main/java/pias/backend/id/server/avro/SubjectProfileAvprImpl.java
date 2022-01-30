@@ -1,6 +1,8 @@
 package pias.backend.id.server.avro;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import org.eclipse.collections.api.list.ImmutableList;
 import pias.backend.avro.SubjectProfileAvpr;
 import pias.backend.avro.SubjectProfileAvro;
@@ -11,7 +13,7 @@ import pias.backend.id.server.entity.SubjectProfile;
 import pias.backend.id.server.entity.SubjectProfileCreate;
 import pias.backend.id.server.entity.SubjectProfileUpdate;
 
-public class SubjectProfileAvprImpl implements SubjectProfileAvpr {
+public class SubjectProfileAvprImpl implements SubjectProfileAvpr.Callback {
   final SubjectProfileService serviceProfileService;
 
   public SubjectProfileAvprImpl(SubjectProfileService serviceProfileService) {
@@ -85,5 +87,80 @@ public class SubjectProfileAvprImpl implements SubjectProfileAvpr {
         serviceProfileService.readSubjectProfilesForCustomerProfile(
             Long.valueOf(customerProfileId));
     return readSubjectProfile.collect(this::toAvro).toList();
+  }
+
+  @Override
+  public void avroCreateSubjectProfile(
+      SubjectProfileCreateAvro request, org.apache.avro.ipc.Callback<SubjectProfileAvro> callback)
+      throws IOException {
+    CompletableFuture.supplyAsync(() -> avroCreateSubjectProfile(request))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
+  }
+
+  @Override
+  public void avroUpdateSubjectProfile(
+      SubjectProfileUpdateAvro update, org.apache.avro.ipc.Callback<SubjectProfileAvro> callback)
+      throws IOException {
+    CompletableFuture.supplyAsync(() -> avroUpdateSubjectProfile(update))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
+  }
+
+  @Override
+  public void avroReadSubjectProfile(
+      String id, org.apache.avro.ipc.Callback<SubjectProfileAvro> callback) throws IOException {
+    CompletableFuture.supplyAsync(() -> avroReadSubjectProfile(id))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
+  }
+
+  @Override
+  public void avroReadVersionedSubjectProfile(
+      String id, String version, org.apache.avro.ipc.Callback<SubjectProfileAvro> callback)
+      throws IOException {
+    CompletableFuture.supplyAsync(() -> avroReadVersionedSubjectProfile(id, version))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
+  }
+
+  @Override
+  public void avroReadSubjectProfilesForCustomerProfile(
+      String customerProfileId, org.apache.avro.ipc.Callback<List<SubjectProfileAvro>> callback)
+      throws IOException {
+    CompletableFuture.supplyAsync(
+            () -> avroReadSubjectProfilesForCustomerProfile(customerProfileId))
+        .whenComplete(
+            (o, t) -> {
+              if (t != null) {
+                callback.handleError(t);
+              } else {
+                callback.handleResult(o);
+              }
+            });
   }
 }

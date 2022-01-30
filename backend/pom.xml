@@ -6,6 +6,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>logging</module>
+        <module>avro-async</module>
         <module>avro-api</module>
         <module>flyway-by-package</module>
         <module>mysql-flyway-by-package</module>
@@ -199,6 +200,11 @@
             <dependency>
                 <groupId>pias.backend</groupId>
                 <artifactId>logging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>pias.backend</groupId>
+                <artifactId>avro-async</artifactId>
                 <version>${project.version}</version>
             </dependency>
 <!--            <dependency>-->
